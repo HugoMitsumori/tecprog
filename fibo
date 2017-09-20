@@ -2,11 +2,9 @@
           DUP   
           STO   0 # x 
           STO   1 # y
-
           PUSH 10
           STO   2  # i
-
-  LOOP:   RCL   0
+LOOP:     RCL   0
           RCL   1
           DUP
           STO   0 # x' = y
@@ -22,5 +20,4 @@
           PUSH  0
           EQ       # i == 0?
           JIF  LOOP
-
           END

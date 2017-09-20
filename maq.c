@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "maq.h"
 
-/* #define DEBUG */
+//#define DEBUG
 
 #ifdef DEBUG
 #  define D(X) X
@@ -73,7 +73,6 @@ void exec_maquina(Maquina *m, int n) {
   	OPERANDO arg = prg[ip].op;
 
   	D(printf("%3d: %-4.4s %d\n     ", ip, CODES[opc], arg));
-    //printf("%3d: %-4.4s %d\n     ", ip, CODES[opc], arg);
   	switch (opc) {
   	  OPERANDO tmp;
   	case PUSH:
@@ -179,7 +178,6 @@ void exec_maquina(Maquina *m, int n) {
       empilha(pil, exec->val[rbp + arg]);
       break;
   	}
-    
   	D(imprime(pil,5));
   	D(puts("\n"));
 

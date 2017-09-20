@@ -12,6 +12,8 @@ typedef enum {
   JIF,
   CALL,
   RET,
+  STL,
+  RCE,
   EQ,
   GT,
   GE,
@@ -21,9 +23,7 @@ typedef enum {
   STO,
   RCL,
   END,
-  PRN,
-  STL,
-  RCE
+  PRN  
 } OpCode;
 
 /* Tipos dos operandos */

@@ -43,7 +43,7 @@ print("};\n")
 
 print( "int main(int ac, char **av) {")
 print( "\tMaquina *maq = cria_maquina(programa);")
-print( "\texec_maquina(maq, 40);")
+print( "\texec_maquina(maq, 1000);")
 print( "\tdestroi_maquina(maq);")
 print( "\treturn 0;")
 print( "}")

@@ -29,7 +29,7 @@ INSTR programa[] = {
 
 int main(int ac, char **av) {
 	Maquina *maq = cria_maquina(programa);
-	exec_maquina(maq, 1000);
+	exec_maquina(maq, 1729);
 	destroi_maquina(maq);
 	return 0;
 }

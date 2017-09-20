@@ -20,8 +20,8 @@ char *CODES[] = {
   "JIF",
   "CALL",
   "RET",
-  "STS",
-  "RCS",
+  "STL",
+  "RCE",
   "EQ",
   "GT",
   "GE",
@@ -170,15 +170,16 @@ void exec_maquina(Maquina *m, int n) {
 	case END:
 	  return;
 	case PRN:
-	  printf("%d\n", desempilha(pil));
+	  printf("%d\n", desempilha(pil));    
 	  break;
-	}
   case STL:
     exec->val[rbp + arg] = desempilha(pil);
     break;
   case RCE:
     empilha(pil, exec->val[rbp + arg]);
     break;
+	}
+  
 	D(imprime(pil,5));
 	D(puts("\n"));
 

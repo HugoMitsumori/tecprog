@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "maq.h"
 
-INSTR progama[] = {
+INSTR programa[] = {
   {PUSH, 1},
   {STO, 0},
   {STO, 1},

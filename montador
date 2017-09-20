@@ -13,8 +13,8 @@ l = stdin.readline()
 ip = 0
 
 tabsim = {}
-
-print("INSTR prog[] = {")
+print("#include <stdio.h>\n#include \"maq.h\"\n")
+print("INSTR programa[] = {")
 while l:
     label = op = ""
     arg   = 0
@@ -39,7 +39,14 @@ while l:
         print()
     l = stdin.readline()
     ip += 1
-print("};")
+print("};\n")
+
+print( "int main(int ac, char **av) {")
+print( "\tMaquina *maq = cria_maquina(programa);")
+print( "\texec_maquina(maq, 0);")
+print( "\tdestroi_maquina(maq);")
+print( "\treturn 0;")
+print( "}")
     
 
 

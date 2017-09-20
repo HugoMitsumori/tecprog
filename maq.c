@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "maq.h"
@@ -62,6 +63,7 @@ void destroi_maquina(Maquina *m) {
 #define pil (&m->pil)
 #define exec (&m->exec)
 #define prg (m->prog)
+#define rbp (m->rbp)
 
 void exec_maquina(Maquina *m, int n) {
   int i;
@@ -115,11 +117,13 @@ void exec_maquina(Maquina *m, int n) {
 	  }
 	  break;
 	case CALL:
-	  empilha(exec, ip);
+	  empilha(exec, ip);    
+    rbp = ip;
 	  ip = arg;
 	  continue;
 	case RET:
 	  ip = desempilha(exec);
+    rbp = ip;
 	  break;
 	case EQ:
 	  if (desempilha(pil) == desempilha(pil))
@@ -169,6 +173,12 @@ void exec_maquina(Maquina *m, int n) {
 	  printf("%d\n", desempilha(pil));
 	  break;
 	}
+  case STL:
+    exec->val[rbp + arg] = desempilha(pil);
+    break;
+  case RCE:
+    empilha(pil, exec->val[rbp + arg]);
+    break;
 	D(imprime(pil,5));
 	D(puts("\n"));
 

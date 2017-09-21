@@ -1,22 +1,21 @@
-INSTR fat[] = {
-    {PUSH, 8},  // 0
-    {CALL, 4},  // 1
-    {PRN,  0},  // 2
-    {END,  0},  // 3
-
-    // FAT
-    {DUP,  0},  // 5
-    {STL,  1},  // 6 n
-    {PUSH, 1},  // 7
-    {EQ,   0},  // 8 n == 1 ?
-    {JIF, 11},  // 9
-    {PUSH, 1},  // 10
-    {RET,  0},  // 12
-    {RCE,  1},  // 13 n
-    {PUSH, 1},  // 14
-    {SUB,  0},  // 15 n-1
-    {CALL, 4},  // 16 fat(n-1)
-    {RCE,  1},  // 17 n
-    {MUL,  0},  // 18 n * fat(n-1)
-    {RET,  0}   // 20
-};
+  PUSH 8  
+  CALL 4  
+  PRN
+  END 
+  ALC  1   
+  DUP 
+  STL  1   
+  PUSH 1   
+  EQ   
+  JIF 13   
+  PUSH 1   
+  FRE  1   
+  RET  
+  RCE  1   
+  PUSH 1   
+  SUB  
+  CALL 4   
+  RCE  1   
+  MUL    
+  FRE  1   
+  RET     

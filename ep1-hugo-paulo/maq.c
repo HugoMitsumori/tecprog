@@ -1,8 +1,10 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "maq.h"
 
+/* Hugo Mitsumori 8941262
+   Paulo Araujo   8941112
+*/
 //#define DEBUG
 
 #ifdef DEBUG

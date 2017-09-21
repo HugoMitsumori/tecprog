@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# Hugo Mitsumori 8941262
+# Paulo Araujo   8941112
+
 """
 Lê, na entrada padrão, um programa na linguagem de montagem da máquina
 virtual e retorna um programa em C que executa este programa.

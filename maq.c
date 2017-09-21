@@ -105,14 +105,14 @@ void exec_maquina(Maquina *m, int n) {
       continue;
     case JIT:
       if (desempilha(pil) != 0) {
-	ip = arg;
-	continue;
+        ip = arg;
+        continue;
       }
       break;
     case JIF:
       if (desempilha(pil) == 0) {
-	ip = arg;
-	continue;
+        ip = arg;
+        continue;
       }
       break;
     case CALL:
@@ -126,39 +126,39 @@ void exec_maquina(Maquina *m, int n) {
       break;
     case EQ:
       if (desempilha(pil) == desempilha(pil))
-	empilha(pil, 1);
+        empilha(pil, 1);
       else
-	empilha(pil, 0);
+        empilha(pil, 0);
       break;
     case GT:
       if (desempilha(pil) < desempilha(pil))
-	empilha(pil, 1);
+        empilha(pil, 1);
       else
-	empilha(pil, 0);
+        empilha(pil, 0);
       break;
     case GE:
       if (desempilha(pil) <= desempilha(pil))
-	empilha(pil, 1);
+        empilha(pil, 1);
       else
-	empilha(pil, 0);
+        empilha(pil, 0);
       break;
     case LT:
       if (desempilha(pil) > desempilha(pil))
-	empilha(pil, 1);
+        empilha(pil, 1);
       else
-	empilha(pil, 0);
+        empilha(pil, 0);
       break;
     case LE:
       if (desempilha(pil) >= desempilha(pil))
-	empilha(pil, 1);
+        empilha(pil, 1);
       else
-	empilha(pil, 0);
+        empilha(pil, 0);
       break;
     case NE:
       if (desempilha(pil) != desempilha(pil))
-	empilha(pil, 1);
+        empilha(pil, 1);
       else
-	empilha(pil, 0);
+        empilha(pil, 0);
       break;
     case STO:
       m->Mem[arg] = desempilha(pil);

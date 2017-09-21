@@ -31,7 +31,9 @@ char *CODES[] = {
   "STO",
   "RCL",
   "END",
-  "PRN"
+  "PRN",
+  "FRE",
+  "ALC"
 };
 #else
 #  define D(X)
@@ -122,6 +124,7 @@ void exec_maquina(Maquina *m, int n) {
       continue;
     case RET:
       ip = desempilha(exec);
+      exec->topo = rbp;
       rbp = ip;
       break;
     case EQ:
@@ -173,6 +176,7 @@ void exec_maquina(Maquina *m, int n) {
       break;
     case STL:
       exec->val[rbp + arg] = desempilha(pil);
+      exec->topo++;
       break;
     case RCE:
       empilha(pil, exec->val[rbp + arg]);

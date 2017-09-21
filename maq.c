@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "maq.h"
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #  define D(X) X
@@ -69,7 +69,7 @@ void destroi_maquina(Maquina *m) {
 
 void exec_maquina(Maquina *m, int n) {
   int i;
-
+  rbp = 0;
   for (i = 0; i < n; i++) {
     OpCode   opc = prg[ip].instr;
     OPERANDO arg = prg[ip].op;
@@ -118,14 +118,14 @@ void exec_maquina(Maquina *m, int n) {
       }
       break;
     case CALL:
-      empilha(exec, ip);    
-      rbp = ip;
+      empilha(exec, ip);  
+      empilha(exec, rbp);  
+      rbp = exec->topo - 2;
       ip = arg;
       continue;
     case RET:
+      rbp = desempilha(exec);
       ip = desempilha(exec);
-      exec->topo = rbp;
-      rbp = ip;
       break;
     case EQ:
       if (desempilha(pil) == desempilha(pil))
@@ -175,19 +175,21 @@ void exec_maquina(Maquina *m, int n) {
       printf("%d\n", desempilha(pil));    
       break;
     case STL:
-      exec->val[rbp + arg] = desempilha(pil);
-      exec->topo++;
+      exec->val[rbp + arg + 1] = desempilha(pil);
       break;
     case RCE:
-      empilha(pil, exec->val[rbp + arg]);
+      empilha(pil, exec->val[rbp + arg + 1]);
       break;
     case ALC:
+      exec->topo += arg;
       break;
     case FRE:
+      exec->topo -= arg;
       break;
     }
-    D(imprime(pil,5));
-    D(puts("\n"));
+    D(puts("Pilha de dados:") );
+    D(imprime(pil,5));    
+    D(puts("\nPilha de execucao:"));
     D(imprime(exec,5));
     D(puts("\n"));
 

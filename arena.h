@@ -1,6 +1,5 @@
-#define ESTRADA 1
-#define MONTANHA 2
-#define RIO 3
+#define PLANO 0
+#define RUGOSO 1
 #define TRUE 1
 #define FALSE 0
 
@@ -11,7 +10,16 @@ typedef struct {
   int base;
 } Celula;
 
-void incializa ();
+typedef struct {
+  Celula*** celulas;
+  int tempo;
+  //Maquina*** maquinas;
+} Arena;
+
+
+Arena* inicializa( int n, int m, int num_times);
+
+Celula*** incializaCelulas (int n, int m, int num_times);
 void atualiza ();
 void insereExercito();
 void removeExercito();

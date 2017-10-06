@@ -3,7 +3,6 @@
 #include "arena.h"
 #include <math.h>
 #include <time.h>
-#include "maq.h"
 
 Celula*** inicializaCelulas (int n, int m, int num_times) {
   int i, j, k, rand_num;
@@ -54,16 +53,29 @@ Celula*** inicializaCelulas (int n, int m, int num_times) {
 }
 
 
+Maquina*** inicializaMaquinas(int num_times, int maquinas_por_time) {  
+  int i, j;
+  Maquina*** maquinas = (Maquina***) calloc ( num_times, sizeof(Maquina**) );
+  for ( i = 0 ; i < num_times ; i++ ) {
+    maquinas[i] = (Maquina**) calloc ( maquinas_por_time, sizeof (Maquina**) );
+    for ( j = 0 ; j < maquinas_por_time ; j++ ) {
+      maquinas[i][j] = (Maquina*) calloc (1, sizeof(Maquina*) ); 
+    }
+  }
+}
+
+
 Arena* inicializa (int n, int m, int num_times) {
   Arena* arena = (Arena*) malloc (sizeof(Arena*));
   arena->celulas = inicializaCelulas(n, m, num_times);
-
+  arena->inicializaMaquinas(num_times, n * m * 0.1 / num_times);
 
 
   return arena;
 }
 
-void insereExercito(Arena* arena) {
+void insereExercito(Arena* arena, int time) {
+  /* 
   arena->maquinas[indiceLivre(arena)] = cria_maquina(NULL);
 }
 

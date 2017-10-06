@@ -4,6 +4,7 @@
 
 typedef struct {
   int id;
+  int time;
   Pilha pil;
   Pilha exec;
   OPERANDO Mem[MAXMEM];

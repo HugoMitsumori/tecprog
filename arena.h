@@ -1,3 +1,5 @@
+#include "maq.h"
+
 #define PLANO 0
 #define RUGOSO 1
 #define TRUE 1
@@ -13,7 +15,7 @@ typedef struct {
 typedef struct {
   Celula*** celulas;
   int tempo;
-  //Maquina*** maquinas;
+  Maquina*** maquinas;
 } Arena;
 
 

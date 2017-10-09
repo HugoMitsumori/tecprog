@@ -1,11 +1,21 @@
-all: arena motor
-	./arena clean
+#
+# Makefile
 
+CFLAGS = -Wall -O2
 
-motor: maq.o pilha.o motor.o
+.PHONY: clean
 
-arena: maq.o arena.o 
+all: clean ep2
+	./ep2 clean
+
+ep2: arena.o maq.o pilha.o
+	$(CC) -o $@ $^
+
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f motor *.o
-
+	rm -f *.o *~ ep2

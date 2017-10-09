@@ -16,6 +16,7 @@ typedef struct {
   int tempo;
   Celula*** celulas;
   Maquina*** maquinas;
+  int maquinas_por_time;
 } Arena;
 
 

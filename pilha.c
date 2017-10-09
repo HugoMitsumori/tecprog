@@ -15,7 +15,7 @@ static void Fatal(char *msg, int cod) {
 Pilha *cria_pilha() {
   Pilha *p = (Pilha*)malloc(sizeof(Pilha));
   if (!p) Fatal("Memória insuficiente",4);
-  p->topo = 0;
+    p->topo = 0;
   return p;
 }
 
@@ -25,14 +25,15 @@ void destroi_pilha(Pilha *p) {
 
 void empilha(Pilha *p, OPERANDO op) {
   if (p->topo < PILMAX)
-	p->val[p->topo++] = op;
+	 p->val[p->topo++] = op;
   else Erro("Pilha cheia");
 }
 
 OPERANDO desempilha(Pilha *p) {
   if (p->topo > 0)
-	return p->val[--p->topo];
+	 return p->val[--p->topo];
   else Erro("Pilha vazia");
+  return 0;
 }
 
 void imprime(Pilha *p, int n) {

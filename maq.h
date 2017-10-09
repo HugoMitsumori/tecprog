@@ -16,7 +16,7 @@ typedef struct {
   int num_cristais;
 } Maquina;
 
-Maquina *cria_maquina(INSTR *p);
+Maquina* cria_maquina(INSTR *p);
 
 void destroi_maquina(Maquina *m);
 

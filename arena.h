@@ -12,9 +12,9 @@ typedef struct {
   int base;
 } Celula;
 
-typedef struct {
-  Celula*** celulas;
+typedef struct {	
   int tempo;
+  Celula*** celulas;
   Maquina*** maquinas;
 } Arena;
 
@@ -23,6 +23,6 @@ Arena* inicializa( int n, int m, int num_times);
 
 Celula*** incializaCelulas (int n, int m, int num_times);
 void atualiza ();
-void insereExercito();
+void insereExercito(Arena* arena, int time);
 void removeExercito();
 void sistema (int op);

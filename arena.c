@@ -108,22 +108,57 @@ INSTR programa[] = {
 };
 
 /* instancia uma nova maquina na posição definida */
+/* TODO: receber instrucoes como parametro? */
 void insereMaquina (Arena* arena, int time, int pos_x, int pos_y) {
   int i;
+  /* cria a maquina na primeira posicao livre da linha */
   for ( i = 0 ; i < arena->maquinas_por_time ; i++ ) {
-    if ( arena->maquinas[time][i] == 0 ) {
-      arena->maquinas[time][i]->id = i + 1;
+    if ( arena->maquinas[time][i] == NULL )
+      arena->maquinas[time][i] = cria_maquina(programa);
+    if ( arena->maquinas[time][i]->id == 0 ) {
+      arena->maquinas[time][i]->id = time * 100 + i + 1;
       arena->maquinas[time][i]->time = time;
       arena->maquinas[time][i]->pos_x = pos_x;
       arena->maquinas[time][i]->pos_y = pos_y;
       arena->celulas[pos_x][pos_y]->ocupado = 1;
+      arena->celulas[pos_x][pos_y]->num_cristais = 0;
+      return;
     }
   }
+  printf("Não há mais espaço para novas máquinas nesse time!");
 }
 
-
+/* insere as maquinas de um novo time na arena */
 void insereExercito(Arena* arena, int time) {
 
+}
+
+/* remove asmaquinas de um time da arena */
+void removeExercito(Arena* arena, int time) {
+  int i, x, y;
+  for ( i = 0 ; i < arena->maquinas_por_time ; i++ ) {
+    x = arena->maquinas[time][i]->pos_x;
+    y = arena->maquinas[time][i]->pos_y;
+    arena->celulas[x][y]->ocupado = FALSE;
+    destroi_maquina(arena->maquinas[time][i]);
+  }
+
+}
+
+/* chamadas de sistemas da maquina para a arena */
+void sistema (int op){
+
+}
+
+/* avança um timestep (correspondente ao numero de instrucoes) para todos os robos */
+void atualiza(Arena* arena, int num_instrucoes) {
+  int i, j;
+  for ( i = 0 ; i < arena->num_times ; i++ ){
+    for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
+      if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0)
+        exec_maquina(arena->maquinas[i][j], num_instrucoes);
+    }
+  }
 }
 
 /* inicializa a Arena e seus atributos */
@@ -132,6 +167,7 @@ Arena* inicializa (int n, int m, int num_times) {
   arena->maquinas_por_time = n * m * 0.1 / num_times;
   arena->celulas = inicializaCelulas(n, m, num_times);
   arena->maquinas = inicializaMaquinas(num_times, arena->maquinas_por_time, programa);
+  arena->num_times = num_times;
   return arena;
 }
 
@@ -145,7 +181,7 @@ int main () {
 
   Arena* arena = inicializa(n, m, times);
 
-  imprimeCelulas(arena, n, m);
+  //imprimeCelulas(arena, n, m);
   
   return 0;
 }

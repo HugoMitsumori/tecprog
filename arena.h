@@ -12,10 +12,11 @@ typedef struct {
   int base;
 } Celula;
 
-typedef struct {	
-  int tempo;
+typedef struct {	  
   Celula*** celulas;
   Maquina*** maquinas;
+  int tempo;
+  int num_times;
   int maquinas_por_time;
 } Arena;
 

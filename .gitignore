@@ -53,3 +53,4 @@ dkms.conf
 .floo
 .flooignore
 ep2
+sftp-config.json

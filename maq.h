@@ -1,20 +1,23 @@
 #include "pilha.h"
+#include "posicao.h"
 
 #define MAXMEM 100
 
 typedef struct {
   int id;
   int time;
+  int vida;
+  int dano;
   Pilha pil;
   Pilha exec;
   OPERANDO Mem[MAXMEM];
   INSTR *prog;
   int ip;
   int rbp;
-  int pos_x;
-  int pos_y;
+  Posicao posicao;
   int num_cristais;
 } Maquina;
+
 
 Maquina* cria_maquina(INSTR *p);
 

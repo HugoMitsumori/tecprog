@@ -6,14 +6,6 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct {
-  int tipo_terreno;
-  int num_cristais;
-  int ocupado;
-  int base;
-} Celula;
-
-
 typedef struct {	  
   Celula*** celulas;
   Maquina*** maquinas;

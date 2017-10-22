@@ -178,12 +178,14 @@ void atualiza(Arena* arena, int num_instrucoes) {
         exec_maquina(arena->maquinas[i][j], num_instrucoes);
     }
   }
+  arena->tempo++;
 }
 
 
 /* inicializa a Arena e seus atributos */
 Arena* inicializa (int n, int m, int num_times) {
   Arena* arena = (Arena*) malloc (sizeof(Arena));
+  arena->tempo = 0;
   arena->maquinas_por_time = 6;
   arena->n = n;
   arena->m = m;

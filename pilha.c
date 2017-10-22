@@ -36,6 +36,11 @@ OPERANDO desempilha(Pilha *p) {
   return 0;
 }
 
+OPERANDO espia(Pilha* p) {
+  if (p->topo > 0 )
+    return p->val[p->topo-1];
+}
+
 void imprime(Pilha *p, int n) {
   int t = p->topo-1;
   int i;

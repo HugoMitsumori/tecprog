@@ -84,7 +84,6 @@ void exec_maquina(Maquina *m, int n) {
   for (i = 0; i < n; i++) {
     OpCode   opc = prg[ip].instr;
     OPERANDO arg = prg[ip].op;
-
     D(printf("%3d: %-4.4s %d\n     ", ip, CODES[opc], arg));
     switch (opc) {
       OPERANDO tmp;
@@ -112,7 +111,7 @@ void exec_maquina(Maquina *m, int n) {
       operacao(pil, MULTIPLICACAO);
       break;
     case DIV:
-     operacao(pil, DIVISAO);
+      operacao(pil, DIVISAO);
       break;
     case JMP:
       ip = arg.valor.n;
@@ -150,54 +149,74 @@ void exec_maquina(Maquina *m, int n) {
         else
           tmp.valor.n = FALSE;
         empilha(pil, op1);    
-      }      
+      }
       break;
     case GT:
-      if (desempilha(pil) < desempilha(pil))
-        empilha(pil, 1);
-      else
-        empilha(pil, 0);
-      break;
+      if (checa2Numero(pil)) {
+        tmp.tipo = NUM;
+        if ( tmp.valor.n < desempilha(pil).valor.n)
+          tmp.valor.n = TRUE;          
+        else
+          tmp.valor.n = FALSE;
+        empilha(pil,op1);
+      }
+      break;      
     case GE:
-      if (desempilha(pil) <= desempilha(pil))
-        empilha(pil, 1);
-      else
-        empilha(pil, 0);
+      if (checa2Numero(pil)) {
+        tmp.tipo = NUM;
+        if ( tmp.valor.n <= desempilha(pil).valor.n)
+          tmp.valor.n = TRUE;          
+        else
+          tmp.valor.n = FALSE;
+        empilha(pil,op1);
+      }
       break;
     case LT:
-      if (desempilha(pil) > desempilha(pil))
-        empilha(pil, 1);
-      else
-        empilha(pil, 0);
-      break;
+      if (checa2Numero(pil)) {
+        tmp.tipo = NUM;
+        if ( tmp.valor.n > desempilha(pil).valor.n)
+          tmp.valor.n = TRUE;          
+        else
+          tmp.valor.n = FALSE;
+        empilha(pil,op1);
+      }
+      break;  
     case LE:
-      if (desempilha(pil) >= desempilha(pil))
-        empilha(pil, 1);
-      else
-        empilha(pil, 0);
+      if (checa2Numero(pil)) {
+        tmp.tipo = NUM;
+        if ( tmp.valor.n >= desempilha(pil).valor.n)
+          tmp.valor.n = TRUE;          
+        else
+          tmp.valor.n = FALSE;
+        empilha(pil,op1);
+      }
       break;
     case NE:
-      if (desempilha(pil) != desempilha(pil))
-        empilha(pil, 1);
-      else
-        empilha(pil, 0);
+      if (checa2Numero(pil)) {
+        tmp.tipo = NUM;
+        if ( tmp.valor.n != desempilha(pil).valor.n)
+          tmp.valor.n = TRUE;          
+        else
+          tmp.valor.n = FALSE;
+        empilha(pil,op1);
+      }
       break;
     case STO:
-      m->Mem[arg] = desempilha(pil);
+      m->Mem[arg.valor.n] = desempilha(pil);
       break;
-    case RCL:
-      empilha(pil,m->Mem[arg]);
+          case RCL:
+      empilha(pil,m->Mem[arg.valor.n]);
       break;
     case END:
       return;
     case PRN:
-      printf("%d (%s)\n", desempilha(pil).valor.n, );
+      printf("%d ()\n", desempilha(pil).valor.n);
       break;
     case STL:
-      exec->val[rbp + arg + 1] = desempilha(pil);
+      exec->val[rbp + arg.valor.n + 1] = desempilha(pil);
       break;
-    case RCE:
-      empilha(pil, exec->val[rbp + arg + 1]);
+          case RCE:
+      empilha(pil, exec->val[rbp + arg.valor.n + 1]);
       break;
     case ALC:
       if (checaNumero(pil))
@@ -213,25 +232,25 @@ void exec_maquina(Maquina *m, int n) {
     D(puts("\nPilha de execucao:"));
     D(imprime(exec,5));
     D(puts("\n"));
-
-    ip++;
+    ip++;    
   }
 }
 
 void operacao (Pilha* pilha, int operacao) {
   OPERANDO op1 = desempilha(pilha);
   OPERANDO op2 = desempilha(pilha);
-  if (op1.tipo == NUM && op.tipo == NUM) {
+  OPERANDO res;
+  if (op1.tipo == NUM && op2.tipo == NUM) {
     res.tipo = NUM;
     switch (operacao) {
-      case SOMA:
-        res.valor.n = op1.valor.n + op2.valor.n; break;
-      case SUBTRACAO:
-        res.valor.n = op1.valor.n - op2.valor.n; break;
-      case MULTIPLICACAO:
-        res.valor.n = op1.valor.n*op2.valor.n; break;
-      case DIVISAO:
-        res.valor.n = op1.valor.n/op2.valor.n; break;
+    case SOMA:
+      res.valor.n = op1.valor.n + op2.valor.n; break;
+    case SUBTRACAO:
+      res.valor.n = op1.valor.n - op2.valor.n; break;
+    case MULTIPLICACAO:
+      res.valor.n = op1.valor.n*op2.valor.n; break;
+    case DIVISAO:
+      res.valor.n = op1.valor.n/op2.valor.n; break;
     }    
     empilha(pilha, res);
   } else {
@@ -250,10 +269,10 @@ int checaNumero(Pilha* pilha){
 
 int checa2Numero(Pilha* pilha){
   OPERANDO op = desempilha(pilha);
-  if (espia(pilha).tipo == NUM && op.tipo == NUM)
+  if (espia(pilha).tipo == NUM && op.tipo == NUM){
     empilha(pilha, op);
     return TRUE;
-  else
-    empilha(pilha, op);
-    return FALSE;
+  }  
+  empilha(pilha, op);
+  return FALSE;  
 }

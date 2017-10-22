@@ -30,10 +30,13 @@ void empilha(Pilha *p, OPERANDO op) {
 }
 
 OPERANDO desempilha(Pilha *p) {
+  OPERANDO opErro;
   if (p->topo > 0)
 	 return p->val[--p->topo];
-  else Erro("Pilha vazia");
-  return 0;
+  Erro("Pilha vazia");
+  opErro.tipo = NUM;
+  opErro.valor.n = 0;
+  return opErro;
 }
 
 OPERANDO espia(Pilha* p) {

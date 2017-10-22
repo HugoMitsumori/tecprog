@@ -11,6 +11,7 @@ Uso:
     montador < entrada > saida
 """
 from sys import stdin
+import re
 
 l = stdin.readline()
 ip = 0
@@ -20,7 +21,7 @@ print("#include <stdio.h>\n#include \"maq.h\"\n")
 print("INSTR programa[] = {")
 while l:
     label = op = ""
-    arg   = 0
+    arg   = "{NUM, 0}"
     try:
         l = l[:l.index('#')]
     except:
@@ -28,14 +29,20 @@ while l:
     keys = l.split()
     if len(keys) > 0 and keys[0].endswith(":"):
         label = keys[0][:-1]              #jogando fora o ':'
-        tabsim[label]=ip
+        tabsim[label]="{NUM, "+ str(ip) + "}"
         keys.pop(0)
     if len(keys) > 0:
         op = keys.pop(0)
     if len(keys) > 0:
-        arg = keys.pop(0)
-        if arg in tabsim:
-            arg = tabsim[arg]
+        struct = re.search(r'\{.+\}', l, re.M|re.I)
+        if struct:
+            arg = struct.group()
+        else:
+            arg = keys.pop(0)
+            if arg.isdigit():
+                arg = "{NUM, " + arg +"}"
+            if arg in tabsim:
+                arg = tabsim[arg]
     if op != "":
         print("  {%s, %s},"%(op,arg))
     else:
@@ -56,5 +63,7 @@ print( "}")
 
 
 # Local variables:
+# mode: python
+# End:
 # mode: python
 # End:

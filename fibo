@@ -1,4 +1,4 @@
-          PUSH  1
+          PUSH  {NUM, 1}
           DUP   
           STO   0 # x 
           STO   1 # y

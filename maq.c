@@ -40,7 +40,9 @@ char *CODES[] = {
   "END",
   "PRN",
   "FRE",
-  "ALC"
+  "ALC",
+  "ATR",
+  "SYS"
 };
 #else
 #  define D(X)
@@ -89,7 +91,6 @@ void exec_maquina(Maquina *m, int n) {
       OPERANDO tmp;
       OPERANDO op1;
       OPERANDO op2;
-      OPERANDO res;
     case PUSH:
       empilha(pil, arg);
       break;

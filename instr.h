@@ -1,5 +1,7 @@
+#include "posicao.h"
 #define TRUE 1
 #define FALSE 0
+
 
 /* Códigos das instruções */
 typedef enum {
@@ -50,12 +52,16 @@ typedef struct {
 } Celula;
 
 typedef struct {
+  int tipo;
+  int direcao;
+} Acao;
+
+typedef struct {
   Tipo tipo;
   union {
  	int n;
- 	int ac;
  	int v;
-  Celula cel;
+  Acao acao;
   } valor;
 } OPERANDO;
 

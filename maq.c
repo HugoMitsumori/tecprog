@@ -227,6 +227,10 @@ void exec_maquina(Maquina *m, int n) {
       if (checaNumero(pil))
         exec->topo -= arg.valor.n;
       break;
+    case ATR:
+      break;
+    case SYS:
+      break;
     }
     D(puts("Pilha de dados:") );
     D(imprime(pil,5));    

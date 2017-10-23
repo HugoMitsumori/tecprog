@@ -1,5 +1,4 @@
 #include "pilha.h"
-#include "posicao.h"
 
 #define MAXMEM 100
 

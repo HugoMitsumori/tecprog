@@ -67,9 +67,10 @@ typedef struct {
 typedef struct {
   Tipo tipo;
   union {
- 	int n;
- 	int v;
-  Acao acao;
+    int n;
+    int v;
+    Acao acao;
+    Celula cel;
   } valor;
 } OPERANDO;
 

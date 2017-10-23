@@ -231,6 +231,19 @@ Acao exec_maquina(Maquina *m, int n) {
         exec->topo -= arg.valor.n;
       break;
     case ATR:
+      op1 = desempilha (pil);
+      op2.tipo = op1.tipo;
+      if (op2.tipo == ACAO){
+	if (arg.valor.n == 0) op2.valor.n = op1.valor.acao.tipo;
+	else if (arg.valor.n == 0) op2.valor.n = op1.valor.acao.direcao;
+      }
+      else if (op2.tipo == CELULA){
+	if (arg.valor.n == 0) op2.valor.n = op1.valor.cel.tipo_terreno;
+	else if (arg.valor.n == 1) op2.valor.n = op1.valor.cel.num_cristais;
+	else if (arg.valor.n == 2) op2.valor.n = op1.valor.cel.ocupado;
+	else if (arg.valor.n == 3) op2.valor.n = op1.valor.cel.base;
+      }
+      empilha (pil, op2);
       break;
     case SYS:
       if (arg.tipo == ACAO){

@@ -40,8 +40,12 @@ OPERANDO desempilha(Pilha *p) {
 }
 
 OPERANDO espia(Pilha* p) {
-  if (p->topo > 0 )
+  OPERANDO opErro;
+  if ( p->topo > 0 )
     return p->val[p->topo-1];
+  opErro.tipo = NUM;
+  opErro.valor.n = 0;
+  return opErro;
 }
 
 void imprime(Pilha *p, int n) {
@@ -49,7 +53,7 @@ void imprime(Pilha *p, int n) {
   int i;
   printf("[");
   for (i = t; i >= 0 && i > p->topo-n; i--) 
-	printf("%4d, ", p->val[i]);
+    printf("%4d, ", p->val[i].valor.n);
   printf("]");
   return;
 }

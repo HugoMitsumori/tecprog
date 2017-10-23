@@ -108,7 +108,7 @@ INSTR programa[] = {
   {RCE, 1},
   {MUL, 0},
   {FRE, 1},
-  {RET, 0},
+  {RET, 0}
 };
 
 /* instancia uma nova maquina na posição definida */

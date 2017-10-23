@@ -1,12 +1,12 @@
 #ifndef __POSICAO_H__
 #define __POSICAO_H__
 
-#define Norte 0
-#define Nordeste 1
-#define Sudeste 2
-#define Sul 3
-#define Sudoeste 4
-#define Noroeste 5
+#define NORTE 0
+#define NORDESTE 1
+#define SUDESTE 2
+#define SUL 3
+#define SUDOESTE 4
+#define NOROESTE 5
 
 typedef struct {
   int i;

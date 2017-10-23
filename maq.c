@@ -80,9 +80,12 @@ int checaNumero(Pilha* pilha);
 int checa2Numero(Pilha* pilha);
 void operacao(Pilha* pilha, int operacao);
 
-void exec_maquina(Maquina *m, int n) {
+Acao exec_maquina(Maquina *m, int n) {
   int i;
   rbp = 0;
+  Acao acao;
+  acao.tipo = NULO;
+  acao.direcao = 0;
   for (i = 0; i < n; i++) {
     OpCode   opc = prg[ip].instr;
     OPERANDO arg = prg[ip].op;
@@ -209,7 +212,7 @@ void exec_maquina(Maquina *m, int n) {
       empilha(pil,m->Mem[arg.valor.n]);
       break;
     case END:
-      return;
+      return acao;
     case PRN:
       printf("%d ()\n", desempilha(pil).valor.n);
       break;
@@ -230,6 +233,9 @@ void exec_maquina(Maquina *m, int n) {
     case ATR:
       break;
     case SYS:
+      if (arg.tipo == ACAO){
+        return arg.valor.acao;
+      }
       break;
     }
     D(puts("Pilha de dados:") );
@@ -239,6 +245,7 @@ void exec_maquina(Maquina *m, int n) {
     D(puts("\n"));
     ip++;    
   }
+  return acao;
 }
 
 void operacao (Pilha* pilha, int operacao) {

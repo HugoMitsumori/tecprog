@@ -165,17 +165,49 @@ void removeExercito(Arena* arena, int time) {
 }
 
 /* chamadas de sistemas da maquina para a arena */
-void sistema (int op){
-
+void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
+  Posicao pos_vizinha = vizinho(maquina->posicao, direcao);
+  Celula* cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
+  Celula* atual = arena->celulas[maquina->posicao.i][maquina->posicao.j];
+  switch (tipo) {
+    case NULO:
+      break;
+    case MOVER:
+      if (!cel_vizinha->ocupado) {
+        atual->ocupado = FALSE;
+        cel_vizinha->ocupado = TRUE;
+        maquina->posicao.i = pos_vizinha.i;
+        maquina->posicao.j = pos_vizinha.j;
+      }
+      break;
+    case RECOLHER:
+      if (cel_vizinha->num_cristais > 0){
+        cel_vizinha->num_cristais--;
+        maquina->num_cristais++;
+      }
+      break;      
+    case DEPOSITAR:
+      if (maquina->num_cristais > 0){
+        maquina->num_cristais--;
+        cel_vizinha->num_cristais++;        
+      }
+      break;
+    case ATACAR:
+      break;
+  }
 }
 
 /* avança um timestep (correspondente ao numero de instrucoes) para todos os robos */
 void atualiza(Arena* arena, int num_instrucoes) {
   int i, j;
+  Acao acao;
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
-      if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0)
-        exec_maquina(arena->maquinas[i][j], num_instrucoes);
+      if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
+        acao = exec_maquina(arena->maquinas[i][j], num_instrucoes);
+        if ( acao.tipo != 0 )
+          sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao); 
+      }
     }
   }
   arena->tempo++;
@@ -219,8 +251,6 @@ void imprimeMaquinas (Arena* arena) {
           arena->maquinas[i][j]->time, arena->maquinas[i][j]->posicao.i, arena->maquinas[i][j]->posicao.j);
       }
     }
-
-
 }
 
 int main () {

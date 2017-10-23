@@ -51,8 +51,16 @@ typedef struct {
   int base;
 } Celula;
 
+typedef enum {
+  NULO,
+  MOVER,
+  RECOLHER,
+  DEPOSITAR,
+  ATACAR
+} TipoAcao;
+
 typedef struct {
-  int tipo;
+  TipoAcao tipo;
   int direcao;
 } Acao;
 

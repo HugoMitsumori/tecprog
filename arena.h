@@ -3,8 +3,7 @@
 
 #define PLANO 0
 #define RUGOSO 1
-#define TRUE 1
-#define FALSE 0
+
 
 typedef struct {	  
   Celula*** celulas;
@@ -24,4 +23,4 @@ Celula*** incializaCelulas (int n, int m, int num_times);
 void atualiza ();
 void insereExercito(Arena* arena, int time);
 void removeExercito(Arena* arena, int time);
-void sistema (int op);
+void sistema (Arena* arena, Maquina* maquina, TipoAcao tipo, int direcao);

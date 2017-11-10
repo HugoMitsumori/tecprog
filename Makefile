@@ -5,9 +5,12 @@ CFLAGS = -std=c99 -O2
 
 .PHONY: clean
 
-all: clean ep2
+all: clean ep2 controle
 
 ep2: arena.o maq.o pilha.o posicao.o
+	$(CC) -o $@ $^
+
+controle: controle.o
 	$(CC) -o $@ $^
 
 %.o: %.c %.h

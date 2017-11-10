@@ -7,10 +7,10 @@ from math import *
 pg.init()                                 # inicialização do sistema
 
 # altura e largura da arena, em células
-H, W = 15,15
+H, W = 20,20
 
 # largura da célula
-l = 30
+l = 20
 # altura da célula
 L = 2*l/sqrt(3)
 
@@ -58,7 +58,27 @@ class Robô(pg.sprite.Sprite):
         # desenha
         scr.blit(s.image, s.rect)
 
-    
+class Base(pg.sprite.Sprite):
+    def __init__(s, img, i, j):
+        pg.sprite.Sprite.__init__(s)
+        s.image = pg.image.load(img)
+        s.rect = s.image.get_rect()
+        s.i = i
+        s.j = j
+        print("Criou a base")
+
+    def draw(s):
+        x, y = convert(s.i, s.j)
+        print("desenhando em %d %d" % (s.i, s.j))
+        # fronteiras do sprite
+        l0,h0,l1,h1 = s.rect
+
+        # corrije a posição de acordo com o tamanho do sprite
+        s.rect.topleft = [x-l1/2,y-h1/2]
+        # desenha
+        scr.blit(s.image, s.rect)
+
+
 class cell:
     """
     Representa uma das células da arena
@@ -81,7 +101,7 @@ class cell:
             (s.cx-l, s.cy+L/2),
             (s.cx-l, s.cy-L/2),
             )
-        
+
     def draw(s) :
         """
         Desenha a célula
@@ -92,17 +112,32 @@ class cell:
 
 # Construção da matriz que representa a arena
 arena = []
-for i in range(15):
+for i in range(H):
     arena.append([])
-    for j in range(15):
+    for j in range(W):
         arena[i].append(cell(i,j))
         arena[i][j].draw()
 
 # lista dos robôs definidos
 robs = []
+bases = []
 
 # atualiza a janela
 atu()
+
+
+def drawAll():
+    # redesenha a célula original (apaga o robô)
+    if 0 <= oi  < W and 0 <= oj < H:
+        arena[oi][oj].draw()
+    # desenha o robô na célula de destino
+    if 0 <= di  < W and 0 <= dj < H and ri < len(robs):
+        robs[ri].draw(di,dj)
+
+    for i in range(0, len(bases)):
+        bases[i].draw()
+
+
 
 # Leitura dos comandos pela entrada padrão ou de um arquivo
 for line in fileinput.input():
@@ -113,21 +148,21 @@ for line in fileinput.input():
         break
 
     # linha começando com 'rob', inclui um robô,
-    # o segundo argumento na linha é a imagem   
+    # o segundo argumento na linha é a imagem
     if r[0] == 'rob':
         robs.append(Robô(r[1]))
         continue
 
     # linha de movimentação:
     # robô, corrdenadas originais, coordenadas finais
+    if r[0] == 'base':
+        bases.append(Base(r[1], int(r[2]), int(r[3])))
+        print("Adicionou base " + r[3])
+        continue
+
     ri, oi, oj, di, dj = list(map(int, r))
 
-    # redesenha a célula original (apaga o robô)
-    if 0 <= oi  < W and 0 <= oj < H:
-        arena[oi][oj].draw()
-    # desenha o robô na célula de destino
-    if 0 <= di  < W and 0 <= dj < H and ri < len(robs):
-        robs[ri].draw(di,dj)
+    drawAll()
 
     # tempo de espera para atualização, apenas para testes
     pg.time.wait(100)

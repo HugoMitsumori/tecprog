@@ -8,16 +8,16 @@ typedef struct {
 } Robot;
 
 FILE *display;
-Robot rb[2];
+Robot rb[3];
 
 
 void anda(int ri) {
   Robot r = rb[ri];
 
-  if (r.pi == 14) r.vi = -1;
+  if (r.pi == 19) r.vi = -1;
   if (r.pi == 0)  r.vi =  1;
 
-  if (r.pj == 14) r.vj = -1;
+  if (r.pj == 19) r.vj = -1;
   if (r.pj == 0)  r.vj =  1;
 
   r.i = r.pi + r.vi;
@@ -48,26 +48,33 @@ int main() {
   rb[0].pj = 14;
   rb[0].vi = -1;
   rb[0].vj =  1;
-  
+
   rb[1].pi = 10;
   rb[1].pj = 11;
   rb[1].vi =  1;
   rb[1].vj = -1;
 
+  rb[2].pi = 3;
+  rb[2].pj = 6;
+  rb[2].vi =  1;
+  rb[2].vj = -1;
+
   if (display == NULL) {
 	fprintf(stderr,"Não encontrei o programa de exibição\n");
 	return 1;
   }
-  
+
   /* cria dois robôs */
   fprintf(display, "rob GILEAD_A.png\nrob GILEAD_B.png\n");
+  fprintf(display, "base base.png 3 4\n");
 
 
-  for (t=0; t < 100; t++) {
+  for (t=0; t < 30; t++) {
 	anda(0);
 	anda(1);
 	mostra(0);
 	mostra(1);
+  mostra(2);
 	fflush(display);
   }
 

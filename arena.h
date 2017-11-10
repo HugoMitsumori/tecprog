@@ -17,9 +17,9 @@ typedef struct {
 } Arena;
 
 
-Arena* inicializa( int n, int m, int num_times);
+Arena* inicializa( int n, int m, int num_times, FILE* display);
 
-Celula*** incializaCelulas (int n, int m, int num_times);
+//Celula*** incializaCelulas (int n, int m, int num_times, FILE* display);
 void atualiza ();
 void insereExercito(Arena* arena, int time);
 void removeExercito(Arena* arena, int time);

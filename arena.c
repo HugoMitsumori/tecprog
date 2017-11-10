@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 2
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -11,17 +12,17 @@
 /* ---------------------------   Celulas -----------------------------------*/
 
 /* aloca memoria e define as propriedades das celulas */
-Celula*** inicializaCelulas (int n, int m, int num_times) {
+Celula*** inicializaCelulas (int n, int m, int num_times, FILE* display) {
   int i, j, k, rand_num;
   Posicao* bases;
   float f;
 
-  /* alocação de memória */  
+  /* alocação de memória */
   Celula*** arena = (Celula***) calloc ( n, sizeof(Celula**) );
   for ( i = 0 ; i < n ; i++ ) {
     arena[i] = (Celula**) calloc ( m, sizeof (Celula*) );
     for ( j = 0 ; j < m ; j++ ) {
-      arena[i][j] = (Celula*) calloc (1, sizeof(Celula) ); 
+      arena[i][j] = (Celula*) calloc (1, sizeof(Celula) );
     }
   }
 
@@ -52,27 +53,30 @@ Celula*** inicializaCelulas (int n, int m, int num_times) {
   bases[3].i = 3*n/4;
   bases[3].j = 3*m/4;
 
+
   /* definir as celulas das bases (1 por time) */
-  for ( k = 0; k < num_times ; k++ )
+  for ( k = 0; k < num_times ; k++ ){
     arena[ bases[k].i ][ bases[k].j ]->base = k + 1;
+    fprintf(display, "base base.png %d %d\n", bases[k]);
+  }
 
   /* sortear depositos de cristais  (5% das celulas) */
   for ( f = 0 ; f < n * m * 0.05 ;) {
     i = rand_num = rand() % n;
     j = rand_num = rand() % m;
-    if (arena[i][j]->num_cristais != 0 || distancia_ij(bases[0], i, j) <= 2 || 
+    if (arena[i][j]->num_cristais != 0 || distancia_ij(bases[0], i, j) <= 2 ||
       distancia_ij(bases[1], i, j) <= 2 || distancia_ij(bases[2], i, j) <= 2
       || distancia_ij(bases[3], i, j) <= 2) continue;
     arena[i][j]->num_cristais = (rand_num = rand() % 5) + 1;
     f++;
   }
-  
+
   return arena;
 }
 
 
 /* alloca memoria para as maquinas do jogo */
-Maquina*** inicializaMaquinas(int num_times, int maquinas_por_time, INSTR *instrucoes) {  
+Maquina*** inicializaMaquinas(int num_times, int maquinas_por_time, INSTR *instrucoes) {
   int i, j;
   Maquina*** maquinas = (Maquina***) calloc ( num_times, sizeof(Maquina**) );
   for ( i = 0 ; i < num_times ; i++ ) {
@@ -187,14 +191,16 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
         cel_vizinha->num_cristais--;
         maquina->num_cristais++;
       }
-      break;      
+      break;
     case DEPOSITAR:
       if (maquina->num_cristais > 0){
         maquina->num_cristais--;
-        cel_vizinha->num_cristais++;        
+        cel_vizinha->num_cristais++;
       }
       break;
     case ATACAR:
+      if (cel_vizinha->ocupado)
+
       break;
   }
 }
@@ -208,7 +214,7 @@ void atualiza(Arena* arena, int num_instrucoes) {
       if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
         acao = exec_maquina(arena->maquinas[i][j], num_instrucoes);
         if ( acao.tipo != 0 ) /* caso tenha chamada de sistema */
-          sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao); 
+          sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao);
       }
     }
   }
@@ -217,7 +223,7 @@ void atualiza(Arena* arena, int num_instrucoes) {
 
 
 /* inicializa a Arena e seus atributos */
-Arena* inicializa (int n, int m, int num_times) {
+Arena* inicializa (int n, int m, int num_times, FILE* display) {
   Arena* arena = (Arena*) malloc (sizeof(Arena));
   arena->tempo = 0;
   arena->maquinas_por_time = 6;
@@ -225,10 +231,10 @@ Arena* inicializa (int n, int m, int num_times) {
   arena->m = m;
   arena->num_times = num_times;
   arena->bases = malloc(num_times * sizeof(Posicao));
-  arena->celulas = inicializaCelulas(n, m, num_times);  
-  arena->maquinas = inicializaMaquinas(num_times, arena->maquinas_por_time, programa); 
+  arena->celulas = inicializaCelulas(n, m, num_times, display);
+  arena->maquinas = inicializaMaquinas(num_times, arena->maquinas_por_time, programa);
   for (int time = 1; time <= num_times; time++)
-    insereExercito (arena, time); 
+    insereExercito (arena, time);
   return arena;
 }
 
@@ -239,8 +245,8 @@ void imprimeCelulas(Arena* arena, int n, int m ) {
   for ( i = 0 ; i < n ; i++ )
     for ( j  = 0 ; j < m ; j++ )
       if (arena->celulas[i][j]->num_cristais != 0)
-        printf("celula[%d][%d] - terreno: %d, cristais: %d, base: %d\n",     
-         i, j, arena->celulas[i][j]->tipo_terreno, arena->celulas[i][j]->num_cristais, 
+        printf("celula[%d][%d] - terreno: %d, cristais: %d, base: %d\n",
+         i, j, arena->celulas[i][j]->tipo_terreno, arena->celulas[i][j]->num_cristais,
          arena->celulas[i][j]->base);
 }
 
@@ -256,17 +262,29 @@ void imprimeMaquinas (Arena* arena) {
 }
 
 int main () {
-  int n, m, times;
+  int n, m, times, i;
   n = 20;
   m = 20;
   times = 4;
+  FILE *display = popen("./apres", "w");
+  if (display == NULL) {
+    fprintf(stderr,"Não encontrei o programa de exibição\n");
+    return 1;
+  }
 
-  Arena* arena = inicializa(n, m, times);
+  Arena* arena = inicializa(n, m, times, display);
 
   imprimeCelulas(arena, n, m);
   removeExercito(arena, 3);
 
   removeExercito(arena, 1);
   imprimeMaquinas(arena);
+
+  fprintf(display, "rob GILEAD_A.png\nrob GILEAD_B.png\n");
+
+  for (i = 0 ; i < 100; i++)
+    fprintf(display, "0 5 5 5 5\n");
+
+  pclose(display);
   return 0;
 }

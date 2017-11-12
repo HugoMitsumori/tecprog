@@ -200,7 +200,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
       }
       break;
     case ATACAR:
-    //Verifica se existe uma maquina na posicao a ser atacada
+      //Verifica se existe uma maquina na posicao a ser atacada
       if (cel_vizinha->ocupado){
       //Procura a maquina vizinha, na lista de maquinas
         for (i = 0; i < arena->num_times; i++)

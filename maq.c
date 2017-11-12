@@ -60,6 +60,7 @@ static void Fatal(char *msg, int cod) {
 Maquina *cria_maquina(INSTR *p) {
   Maquina *m = (Maquina*)calloc(1, sizeof(Maquina));
   if (!m) Fatal("Memória insuficiente",4);
+  m->vida = 1;
   m->ip = 0;
   m->prog = p;
   return m;
@@ -136,8 +137,8 @@ Acao exec_maquina(Maquina *m, int n) {
       op1.tipo = op2.tipo = NUM;
       op1.valor.n = ip;
       op2.valor.n = rbp;
-      empilha(exec, op1);  
-      empilha(exec, op2);  
+      empilha(exec, op1);
+      empilha(exec, op2);
       rbp = exec->topo - 2;
       ip = arg.valor.n;
       continue;
@@ -145,31 +146,31 @@ Acao exec_maquina(Maquina *m, int n) {
       rbp = desempilha(exec).valor.n;
       ip = desempilha(exec).valor.n;
       break;
-    case EQ:         
+    case EQ:
       if (checa2Numero(pil)) {
         tmp.tipo = NUM;
         if ( tmp.valor.n == desempilha(pil).valor.n)
-          tmp.valor.n = TRUE;          
+          tmp.valor.n = TRUE;
         else
           tmp.valor.n = FALSE;
-        empilha(pil, op1);    
+        empilha(pil, op1);
       }
       break;
     case GT:
       if (checa2Numero(pil)) {
         tmp.tipo = NUM;
         if ( tmp.valor.n < desempilha(pil).valor.n)
-          tmp.valor.n = TRUE;          
+          tmp.valor.n = TRUE;
         else
           tmp.valor.n = FALSE;
         empilha(pil,op1);
       }
-      break;      
+      break;
     case GE:
       if (checa2Numero(pil)) {
         tmp.tipo = NUM;
         if ( tmp.valor.n <= desempilha(pil).valor.n)
-          tmp.valor.n = TRUE;          
+          tmp.valor.n = TRUE;
         else
           tmp.valor.n = FALSE;
         empilha(pil,op1);
@@ -179,17 +180,17 @@ Acao exec_maquina(Maquina *m, int n) {
       if (checa2Numero(pil)) {
         tmp.tipo = NUM;
         if ( tmp.valor.n > desempilha(pil).valor.n)
-          tmp.valor.n = TRUE;          
+          tmp.valor.n = TRUE;
         else
           tmp.valor.n = FALSE;
         empilha(pil,op1);
       }
-      break;  
+      break;
     case LE:
       if (checa2Numero(pil)) {
         tmp.tipo = NUM;
         if ( tmp.valor.n >= desempilha(pil).valor.n)
-          tmp.valor.n = TRUE;          
+          tmp.valor.n = TRUE;
         else
           tmp.valor.n = FALSE;
         empilha(pil,op1);
@@ -199,7 +200,7 @@ Acao exec_maquina(Maquina *m, int n) {
       if (checa2Numero(pil)) {
         tmp.tipo = NUM;
         if ( tmp.valor.n != desempilha(pil).valor.n)
-          tmp.valor.n = TRUE;          
+          tmp.valor.n = TRUE;
         else
           tmp.valor.n = FALSE;
         empilha(pil,op1);
@@ -236,7 +237,7 @@ Acao exec_maquina(Maquina *m, int n) {
       if (op2.tipo == ACAO){
         if (arg.valor.n == 0) op2.valor.n = op1.valor.acao.tipo;
         else if (arg.valor.n == 1) op2.valor.n = op1.valor.acao.direcao;
-      } 
+      }
       else if (op2.tipo == CELULA){
         if (arg.valor.n == 0) op2.valor.n = op1.valor.cel.tipo_terreno;
         else if (arg.valor.n == 1) op2.valor.n = op1.valor.cel.num_cristais;
@@ -252,11 +253,11 @@ Acao exec_maquina(Maquina *m, int n) {
       break;
     }
     D(puts("Pilha de dados:") );
-    D(imprime(pil,5));    
+    D(imprime(pil,5));
     D(puts("\nPilha de execucao:"));
     D(imprime(exec,5));
     D(puts("\n"));
-    ip++;    
+    ip++;
   }
   return acao;
 }
@@ -277,7 +278,7 @@ void operacao (Pilha* pilha, int operacao) {
       res.valor.n = op1.valor.n*op2.valor.n; break;
     case DIVISAO:
       res.valor.n = op1.valor.n/op2.valor.n; break;
-    }    
+    }
     empilha(pilha, res);
   } else {
     empilha(pilha, op2);
@@ -300,7 +301,7 @@ int checa2Numero(Pilha* pilha){
   if (espia(pilha).tipo == NUM && op.tipo == NUM){
     empilha(pilha, op);
     return TRUE;
-  }  
+  }
   empilha(pilha, op);
-  return FALSE;  
+  return FALSE;
 }

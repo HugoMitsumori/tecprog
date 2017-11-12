@@ -172,6 +172,7 @@ void removeExercito(Arena* arena, int time) {
 
 /* chamadas de sistemas da maquina para a arena */
 void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
+  int i, j;
   Posicao pos_vizinha = vizinho(maquina->posicao, direcao);
   Celula* cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
   Celula* atual = arena->celulas[maquina->posicao.i][maquina->posicao.j];
@@ -199,8 +200,26 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
       }
       break;
     case ATACAR:
-      if (cel_vizinha->ocupado)
-
+    //Verifica se existe uma maquina na posicao a ser atacada
+      if (cel_vizinha->ocupado){
+      //Procura a maquina vizinha, na lista de maquinas
+        for (i = 0; i < arena->num_times; i++)
+          for (j = 0; j < arena->maquinas_por_time; j++)
+            if (arena->maquinas[i][j] &&
+                arena->maquinas[i][j]->posicao.i == pos_vizinha.i &&
+                arena->maquinas[i][j]->posicao.j == pos_vizinha.j){
+              //Ataca maquina vizinha
+              arena->maquinas[i][j]->vida--;
+              arena->maquinas[i][j]->dano++;
+              //Se maquina vizinha morreu, remove-a da lista e da celula vizinha
+              if (arena->maquinas[i][j]->vida == 0){
+                printf("maquina %d morreu\n", arena->maquinas[i][j]->id);
+                arena->maquinas[i][j] = NULL;
+                cel_vizinha->ocupado = 0;
+              }
+            }
+      }
+      else puts ("Nao tem ninguem ali\n");
       break;
   }
 }
@@ -275,9 +294,9 @@ int main () {
   Arena* arena = inicializa(n, m, times, display);
 
   imprimeCelulas(arena, n, m);
-  removeExercito(arena, 3);
+  //removeExercito(arena, 3);
 
-  removeExercito(arena, 1);
+  //removeExercito(arena, 1);
   imprimeMaquinas(arena);
 
   fprintf(display, "rob GILEAD_A.png\nrob GILEAD_B.png\n");
@@ -285,6 +304,15 @@ int main () {
   for (i = 0 ; i < 100; i++)
     fprintf(display, "0 5 5 5 5\n");
 
+  //INICIO TESTE ATAQUE
+  printf("vida 102: %d\n", arena->maquinas[0][1]->vida);
+  printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
+
+  sistema (arena, arena->maquinas[0][1], ATACAR, SUL);
+
+  printf("vida 102: %d\n", arena->maquinas[0][1]->vida);
+  printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
+  //FIM TESTE ATAQUE
   pclose(display);
   return 0;
 }

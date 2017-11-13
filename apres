@@ -78,6 +78,25 @@ class Base(pg.sprite.Sprite):
         # desenha
         scr.blit(s.image, s.rect)
 
+class Cristal(pg.sprite.Sprite):
+    def __init__(s, img, i, j):
+        pg.sprite.Sprite.__init__(s)
+        s.image = pg.image.load(img)
+        s.rect = s.image.get_rect()
+        s.i = i
+        s.j = j
+        print("Criou um deposito de cristais")
+
+    def draw(s):
+        x, y = convert(s.i, s.j)
+        # fronteiras do sprite
+        l0,h0,l1,h1 = s.rect
+        # corrije a posição de acordo com o tamanho do sprite
+        s.rect.topleft = [x-l1/2,y-h1/2]
+        # desenha
+        scr.blit(s.image, s.rect)
+
+
 
 class cell:
     """
@@ -121,6 +140,7 @@ for i in range(H):
 # lista dos robôs definidos
 robs = []
 bases = []
+cristais = []
 
 # atualiza a janela
 atu()
@@ -136,6 +156,9 @@ def drawAll():
 
     for i in range(0, len(bases)):
         bases[i].draw()
+
+    for i in range(0, len(cristais)):
+        cristais[i].draw()
 
 
 
@@ -160,12 +183,16 @@ for line in fileinput.input():
         print("Adicionou base " + r[3])
         continue
 
+    if r[0] == 'cristal':
+        cristais.append(Cristal(r[1], int(r[2]), int(r[3])))
+        continue
+
     ri, oi, oj, di, dj = list(map(int, r))
 
     drawAll()
 
     # tempo de espera para atualização, apenas para testes
-    pg.time.wait(100)
+    pg.time.wait(2)
 
     atu()
 

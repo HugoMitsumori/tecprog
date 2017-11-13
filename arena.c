@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <unistd.h>
 
 
 #include "arena.h"
@@ -66,8 +67,9 @@ Celula*** inicializaCelulas (int n, int m, int num_times, FILE* display) {
     j = rand_num = rand() % m;
     if (arena[i][j]->num_cristais != 0 || distancia_ij(bases[0], i, j) <= 2 ||
       distancia_ij(bases[1], i, j) <= 2 || distancia_ij(bases[2], i, j) <= 2
-      || distancia_ij(bases[3], i, j) <= 2) continue;
+      || distancia_ij(bases[3], i, j) <= 2) continue;    
     arena[i][j]->num_cristais = (rand_num = rand() % 5) + 1;
+    fprintf(display, "cristal %dc.png %d %d\n", arena[i][j]->num_cristais, i, j);
     f++;
   }
 
@@ -238,6 +240,7 @@ void atualiza(Arena* arena, int num_instrucoes) {
     }
   }
   arena->tempo++;
+  //sleep(1);
 }
 
 
@@ -305,13 +308,16 @@ int main () {
     fprintf(display, "0 5 5 5 5\n");
 
   //INICIO TESTE ATAQUE
-  printf("vida 102: %d\n", arena->maquinas[0][1]->vida);
-  printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
+  if (arena->maquinas[0][1] != NULL)
+    printf("vida 102: %d\n", arena->maquinas[0][1]->vida);
+  if (arena->maquinas[0][2] != NULL)
+    printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
 
   sistema (arena, arena->maquinas[0][1], ATACAR, SUL);
-
-  printf("vida 102: %d\n", arena->maquinas[0][1]->vida);
-  printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
+  if (arena->maquinas[0][1] != NULL)
+    printf("vida 102: %d\n", arena->maquinas[0][1]->vida);
+  if (arena->maquinas[0][2] != NULL)
+    printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
   //FIM TESTE ATAQUE
   pclose(display);
   return 0;

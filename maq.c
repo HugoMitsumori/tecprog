@@ -88,15 +88,15 @@ Acao exec_maquina(Maquina *m, int n) {
   acao.tipo = NULO;
   acao.direcao = 0;
   for (i = 0; i < n; i++) {
-    OpCode   opc = prg[ip].instr;
-    OPERANDO arg = prg[ip].op;
-    D(printf("%3d: %-4.4s %d\n", ip, CODES[opc], arg));
-    switch (opc) {
+    OpCode   opCode = prg[ip].instr;
+    OPERANDO operando = prg[ip].op;
+    D(printf("%d - %3d: %-4.4s %d\n", m->id, ip, CODES[opCode], operando));
+    switch (opCode) {
       OPERANDO tmp;
       OPERANDO op1;
       OPERANDO op2;
     case PUSH:
-      empilha(pil, arg);
+      empilha(pil, operando);
       break;
     case POP:
       desempilha(pil);
@@ -119,17 +119,17 @@ Acao exec_maquina(Maquina *m, int n) {
       operacao(pil, DIVISAO);
       break;
     case JMP:
-      ip = arg.valor.n;
+      ip = operando.valor.n;
       continue;
     case JIT:
       if ( checaNumero(pil) && desempilha(pil).valor.n != 0) {
-        ip = arg.valor.n;
+        ip = operando.valor.n;
         continue;
       }
       break;
     case JIF:
       if ( checaNumero(pil) && desempilha(pil).valor.n == 0) {
-        ip = arg.valor.n;
+        ip = operando.valor.n;
         continue;
       }
       break;
@@ -140,7 +140,7 @@ Acao exec_maquina(Maquina *m, int n) {
       empilha(exec, op1);
       empilha(exec, op2);
       rbp = exec->topo - 2;
-      ip = arg.valor.n;
+      ip = operando.valor.n;
       continue;
     case RET:
       rbp = desempilha(exec).valor.n;
@@ -207,10 +207,10 @@ Acao exec_maquina(Maquina *m, int n) {
       }
       break;
     case STO:
-      m->Mem[arg.valor.n] = desempilha(pil);
+      m->Mem[operando.valor.n] = desempilha(pil);
       break;
           case RCL:
-      empilha(pil,m->Mem[arg.valor.n]);
+      empilha(pil,m->Mem[operando.valor.n]);
       break;
     case END:
       return acao;
@@ -218,37 +218,37 @@ Acao exec_maquina(Maquina *m, int n) {
       printf("%d ()\n", desempilha(pil).valor.n);
       break;
     case STL:
-      exec->val[rbp + arg.valor.n + 1] = desempilha(pil);
+      exec->val[rbp + operando.valor.n + 1] = desempilha(pil);
       break;
           case RCE:
-      empilha(pil, exec->val[rbp + arg.valor.n + 1]);
+      empilha(pil, exec->val[rbp + operando.valor.n + 1]);
       break;
     case ALC:
       if (checaNumero(pil))
-        exec->topo += arg.valor.n;
+        exec->topo += operando.valor.n;
       break;
     case FRE:
       if (checaNumero(pil))
-        exec->topo -= arg.valor.n;
+        exec->topo -= operando.valor.n;
       break;
     case ATR:
       op1 = desempilha (pil);
       op2.tipo = op1.tipo;
       if (op2.tipo == ACAO){
-        if (arg.valor.n == 0) op2.valor.n = op1.valor.acao.tipo;
-        else if (arg.valor.n == 1) op2.valor.n = op1.valor.acao.direcao;
+        if (operando.valor.n == 0) op2.valor.n = op1.valor.acao.tipo;
+        else if (operando.valor.n == 1) op2.valor.n = op1.valor.acao.direcao;
       }
       else if (op2.tipo == CELULA){
-        if (arg.valor.n == 0) op2.valor.n = op1.valor.cel.tipo_terreno;
-        else if (arg.valor.n == 1) op2.valor.n = op1.valor.cel.num_cristais;
-        else if (arg.valor.n == 2) op2.valor.n = op1.valor.cel.ocupado;
-        else if (arg.valor.n == 3) op2.valor.n = op1.valor.cel.base;
+        if (operando.valor.n == 0) op2.valor.n = op1.valor.cel.tipo_terreno;
+        else if (operando.valor.n == 1) op2.valor.n = op1.valor.cel.num_cristais;
+        else if (operando.valor.n == 2) op2.valor.n = op1.valor.cel.ocupado;
+        else if (operando.valor.n == 3) op2.valor.n = op1.valor.cel.base;
       }
       empilha (pil, op2);
       break;
     case SYS:
-      if (arg.tipo == ACAO){
-        return arg.valor.acao;
+      if (operando.tipo == ACAO){
+        return operando.valor.acao;
       }
       break;
     }

@@ -289,7 +289,7 @@ int main () {
   //imprimeMaquinas(arena);  
 
 
-  for (i = 0 ; i < 5 ; i ++){    
+  for (i = 0 ; i < 4 ; i ++){    
     atualiza(arena, 1);
   }
   pclose(arena->display);

@@ -65,7 +65,6 @@ class Base(pg.sprite.Sprite):
         s.rect = s.image.get_rect()
         s.i = i
         s.j = j
-        print("Criou a base")
 
     def draw(s):
         x, y = convert(s.i, s.j)
@@ -84,7 +83,6 @@ class Cristal(pg.sprite.Sprite):
         s.rect = s.image.get_rect()
         s.i = i
         s.j = j
-        print("Criou um deposito de cristais")
 
     def draw(s):
         x, y = convert(s.i, s.j)
@@ -137,7 +135,7 @@ for i in range(H):
         arena[i][j].draw()
 
 # lista dos robôs definidos
-robs = []
+robs = {}
 bases = []
 cristais = []
 
@@ -150,7 +148,7 @@ def drawAll():
     if 0 <= oi  < W and 0 <= oj < H:
         arena[oi][oj].draw()
     # desenha o robô na célula de destino
-    if 0 <= di  < W and 0 <= dj < H and ri < len(robs):
+    if 0 <= di  < W and 0 <= dj < H and ri in robs:
         robs[ri].draw(di,dj)
 
     for base in bases:
@@ -172,14 +170,13 @@ for line in fileinput.input():
     # linha começando com 'rob', inclui um robô,
     # o segundo argumento na linha é a imagem
     if r[0] == 'rob':
-        robs.insert(int(r[2]), Robô(r[1]))
+        robs[int(r[2])] = Robô(r[1])
         continue
 
     # linha de movimentação:
-    # robô, corrdenadas originais, coordenadas finais
+    # robô, coordenadas originais, coordenadas finais
     if r[0] == 'base':
         bases.append(Base(r[1], int(r[2]), int(r[3])))
-        print("Adicionou base " + r[3])
         continue
 
     if r[0] == 'cristal':
@@ -191,7 +188,7 @@ for line in fileinput.input():
     drawAll()
 
     # tempo de espera para atualização, apenas para testes
-    pg.time.wait(2)
+    #pg.time.wait(2)
 
     atu()
 

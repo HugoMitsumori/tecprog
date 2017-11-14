@@ -290,7 +290,7 @@ void imprimeMaquinas (Arena* arena) {
 }
 
 int main () {
-  int n, m, times, i;
+  int n, m, times, i, a, b;
   n = 20;
   m = 20;
   times = 4;
@@ -304,9 +304,12 @@ int main () {
   imprimeMaquinas(arena);
 
   fprintf(arena->display, "rob GILEAD_A.png 1\nrob GILEAD_B.png 2\n");
-
-  for (i = 0 ; i < 100; i++)
-    fprintf(arena->display, "1 5 5 5 5\n");
+  b = 2;
+  for (i = 0 ; i < 100; i++){
+    a = i % 5;
+    fprintf(arena->display, "405 %d 5 %d 5\n", a, b);
+    b = a;
+  }
 
   //INICIO TESTE ATAQUE
   if (arena->maquinas[0][1] != NULL)

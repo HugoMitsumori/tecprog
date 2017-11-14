@@ -94,27 +94,11 @@ Maquina*** inicializaMaquinas(int num_times, int maquinas_por_time, INSTR *instr
 
 /* comportamento basico das maquinas */
 INSTR programa[] = {
-  {PUSH, 8},
-  {CALL, 4},
-  {PRN, 0},
-  {END, 0},
-  {ALC, 1},
-  {DUP, 0},
-  {STL, 1},
-  {PUSH, 1},
-  {EQ, 0},
-  {JIF, 13},
-  {PUSH, 1},
-  {FRE, 1},
-  {RET, 0},
-  {RCE, 1},
-  {PUSH, 1},
-  {SUB, 0},
-  {CALL, 4},
-  {RCE, 1},
-  {MUL, 0},
-  {FRE, 1},
-  {RET, 0}
+  {SYS, {MOVER, NORTE}},
+  {SYS, {MOVER, SUL}},
+  {SYS, {MOVER, NOROESTE}},
+  {SYS, {MOVER, NORDESTE}},
+  {SYS, {MOVER, SUL}}
 };
 
 /* instancia uma nova maquina na posição definida */
@@ -184,8 +168,10 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
       break;
     case MOVER:
       if (!cel_vizinha->ocupado) {
+        printf("Vai mover\n");
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
+        fprintf(arena->display, "%d %d %d %d %d\n", maquina->id, maquina->posicao.i, maquina->posicao.j, pos_vizinha.i, pos_vizinha.j);
         maquina->posicao.i = pos_vizinha.i;
         maquina->posicao.j = pos_vizinha.j;
       }
@@ -235,13 +221,13 @@ void atualiza(Arena* arena, int num_instrucoes) {
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
         acao = exec_maquina(arena->maquinas[i][j], num_instrucoes);
+        printf("Executando instrucao %d\n", acao.tipo);
         if ( acao.tipo != 0 ) /* caso tenha chamada de sistema */
           sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao);
       }
     }
   }
   arena->tempo++;
-  //sleep(1);
 }
 
 
@@ -297,19 +283,11 @@ int main () {
 
   Arena* arena = inicializa(n, m, times);
 
-  imprimeCelulas(arena, n, m);
+  //imprimeCelulas(arena, n, m);
   //removeExercito(arena, 3);
 
   //removeExercito(arena, 1);
-  imprimeMaquinas(arena);
-
-  fprintf(arena->display, "rob GILEAD_A.png 1\nrob GILEAD_B.png 2\n");
-  b = 2;
-  for (i = 0 ; i < 100; i++){
-    a = i % 5;
-    fprintf(arena->display, "405 %d 5 %d 5\n", a, b);
-    b = a;
-  }
+  //imprimeMaquinas(arena);  
 
   //INICIO TESTE ATAQUE
   if (arena->maquinas[0][1] != NULL)
@@ -323,6 +301,10 @@ int main () {
   if (arena->maquinas[0][2] != NULL)
     printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
   //FIM TESTE ATAQUE
+
+  for (i = 0 ; i < 5 ; i ++){    
+    atualiza(arena, 1);
+  }
   pclose(arena->display);
   return 0;
 }

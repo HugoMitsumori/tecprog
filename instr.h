@@ -37,12 +37,7 @@ typedef enum {
 
 /* Tipos dos operandos */
 /* no momento, são todos inteiros */
-typedef enum {
-  NUM,
-  ACAO,
-  VAR,
-  CELULA
-} Tipo;
+
 
 typedef struct {
   int tipo_terreno;
@@ -64,6 +59,13 @@ typedef struct {
   int direcao;
 } Acao;
 
+typedef enum {
+  NUM,
+  ACAO,
+  VAR,
+  CELULA
+} Tipo;
+
 typedef struct {
   Tipo tipo;
   union {
@@ -73,7 +75,6 @@ typedef struct {
     Celula cel;
   } valor;
 } OPERANDO;
-
 
 /* Instrução */
 typedef struct {

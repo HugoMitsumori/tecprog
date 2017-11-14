@@ -10,7 +10,7 @@
 #define MULTIPLICACAO 2
 #define DIVISAO 3
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #  define D(X) X
@@ -90,7 +90,7 @@ Acao exec_maquina(Maquina *m, int n) {
   for (i = 0; i < n; i++) {
     OpCode   opc = prg[ip].instr;
     OPERANDO arg = prg[ip].op;
-    D(printf("%3d: %-4.4s %d\n     ", ip, CODES[opc], arg));
+    D(printf("%3d: %-4.4s %d\n", ip, CODES[opc], arg));
     switch (opc) {
       OPERANDO tmp;
       OPERANDO op1;

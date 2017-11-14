@@ -69,7 +69,6 @@ class Base(pg.sprite.Sprite):
 
     def draw(s):
         x, y = convert(s.i, s.j)
-        print("desenhando em %d %d" % (s.i, s.j))
         # fronteiras do sprite
         l0,h0,l1,h1 = s.rect
 
@@ -154,11 +153,11 @@ def drawAll():
     if 0 <= di  < W and 0 <= dj < H and ri < len(robs):
         robs[ri].draw(di,dj)
 
-    for i in range(0, len(bases)):
-        bases[i].draw()
+    for base in bases:
+        base.draw()
 
-    for i in range(0, len(cristais)):
-        cristais[i].draw()
+    for cristal in cristais:
+        cristal.draw()
 
 
 
@@ -173,7 +172,7 @@ for line in fileinput.input():
     # linha começando com 'rob', inclui um robô,
     # o segundo argumento na linha é a imagem
     if r[0] == 'rob':
-        robs.append(Robô(r[1]))
+        robs.insert(int(r[2]), Robô(r[1]))
         continue
 
     # linha de movimentação:

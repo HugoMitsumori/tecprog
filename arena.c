@@ -132,6 +132,7 @@ void insereMaquina (Arena* arena, int time, Posicao pos) {
       arena->maquinas[time-1][i]->posicao.j = pos.j;
       arena->celulas[pos.i][pos.j]->ocupado = 1;
       arena->celulas[pos.i][pos.j]->num_cristais = 0;
+      fprintf(arena->display, "rob GILEAD_A.png %d\n", arena->maquinas[time-1][i]->id);
       return;
     }
   }
@@ -302,10 +303,10 @@ int main () {
   //removeExercito(arena, 1);
   imprimeMaquinas(arena);
 
-  fprintf(arena->display, "rob GILEAD_A.png\nrob GILEAD_B.png\n");
+  fprintf(arena->display, "rob GILEAD_A.png 1\nrob GILEAD_B.png 2\n");
 
   for (i = 0 ; i < 100; i++)
-    fprintf(arena->display, "0 5 5 5 5\n");
+    fprintf(arena->display, "1 5 5 5 5\n");
 
   //INICIO TESTE ATAQUE
   if (arena->maquinas[0][1] != NULL)

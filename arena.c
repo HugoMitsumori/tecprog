@@ -245,15 +245,20 @@ void atualiza(Arena* arena, int num_instrucoes) {
 
 
 /* inicializa a Arena e seus atributos */
-Arena* inicializa (int n, int m, int num_times, FILE* display) {
+Arena* inicializa (int n, int m, int num_times) {
   Arena* arena = (Arena*) malloc (sizeof(Arena));
+  arena->display = popen("./apres", "w");
+  if (arena->display == NULL) {
+    fprintf(stderr,"Não encontrei o programa de exibição\n");
+    return NULL;
+  }
   arena->tempo = 0;
   arena->maquinas_por_time = 6;
   arena->n = n;
   arena->m = m;
   arena->num_times = num_times;
   arena->bases = malloc(num_times * sizeof(Posicao));
-  arena->celulas = inicializaCelulas(n, m, num_times, display);
+  arena->celulas = inicializaCelulas(n, m, num_times, arena->display);
   arena->maquinas = inicializaMaquinas(num_times, arena->maquinas_por_time, programa);
   for (int time = 1; time <= num_times; time++)
     insereExercito (arena, time);
@@ -288,13 +293,8 @@ int main () {
   n = 20;
   m = 20;
   times = 4;
-  FILE *display = popen("./apres", "w");
-  if (display == NULL) {
-    fprintf(stderr,"Não encontrei o programa de exibição\n");
-    return 1;
-  }
 
-  Arena* arena = inicializa(n, m, times, display);
+  Arena* arena = inicializa(n, m, times);
 
   imprimeCelulas(arena, n, m);
   //removeExercito(arena, 3);
@@ -302,10 +302,10 @@ int main () {
   //removeExercito(arena, 1);
   imprimeMaquinas(arena);
 
-  fprintf(display, "rob GILEAD_A.png\nrob GILEAD_B.png\n");
+  fprintf(arena->display, "rob GILEAD_A.png\nrob GILEAD_B.png\n");
 
   for (i = 0 ; i < 100; i++)
-    fprintf(display, "0 5 5 5 5\n");
+    fprintf(arena->display, "0 5 5 5 5\n");
 
   //INICIO TESTE ATAQUE
   if (arena->maquinas[0][1] != NULL)
@@ -319,6 +319,6 @@ int main () {
   if (arena->maquinas[0][2] != NULL)
     printf("vida 103: %d\n", arena->maquinas[0][2]->vida);
   //FIM TESTE ATAQUE
-  pclose(display);
+  pclose(arena->display);
   return 0;
 }

@@ -14,10 +14,11 @@ typedef struct {
   int n; 
   int m;
   Posicao* bases;
+  FILE* display;
 } Arena;
 
 
-Arena* inicializa( int n, int m, int num_times, FILE* display);
+Arena* inicializa( int n, int m, int num_times);
 
 //Celula*** incializaCelulas (int n, int m, int num_times, FILE* display);
 void atualiza ();

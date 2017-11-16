@@ -58,7 +58,7 @@ Celula*** inicializaCelulas (int n, int m, int num_times, FILE* display) {
   /* definir as celulas das bases (1 por time) */
   for ( k = 0; k < num_times ; k++ ){
     arena[ bases[k].i ][ bases[k].j ]->base = k + 1;
-    fprintf(display, "base base.png %d %d\n", bases[k]);
+    fprintf(display, "base base.png %d %d\n", bases[k].i, bases[k].j);
   }
 
   /* sortear depositos de cristais  (5% das celulas) */

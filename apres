@@ -183,12 +183,16 @@ for line in fileinput.input():
         cristais.append(Cristal(r[1], int(r[2]), int(r[3])))
         continue
 
+    if r[0] == 'remove':
+        if r[1] == 'rob':
+            del robs[int(r[2])]
+
     ri, oi, oj, di, dj = list(map(int, r))
 
     drawAll()
 
     # tempo de espera para atualização, apenas para testes
-    pg.time.wait(1000)
+    pg.time.wait(300)
 
     atu()
 

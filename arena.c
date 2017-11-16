@@ -202,6 +202,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
               //Se maquina vizinha morreu, remove-a da lista e da celula vizinha
               if (arena->maquinas[i][j]->vida == 0){
                 printf("maquina %d morreu\n", arena->maquinas[i][j]->id);
+                fprintf(arena->display, "remove rob %d\n", arena->maquinas[i][j]->id);
                 arena->maquinas[i][j] = NULL;
                 cel_vizinha->ocupado = 0;
               }

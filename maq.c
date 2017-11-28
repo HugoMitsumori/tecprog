@@ -10,7 +10,7 @@
 #define MULTIPLICACAO 2
 #define DIVISAO 3
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #  define D(X) X

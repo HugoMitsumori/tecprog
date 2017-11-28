@@ -157,6 +157,35 @@ void removeExercito(Arena* arena, int time) {
 
 }
 
+Vizinho* checaVizinho(Arena* arena, Posicao posicao, int direcao){
+    Posicao pos_vizinha = vizinho(posicao, direcao);
+    Vizinho* vizinho;
+    vizinho->tipo = PAREDE;
+    if (pos_vizinha.i >= 0 && pos_vizinha.j >= 0 && pos_vizinha.i < arena->n && pos_vizinha.j < arena->m){
+        if (arena->celulas[pos_vizinha.i][pos_vizinha.j]->base > 0)
+          vizinho->tipo = BASE;
+          vizinho->valor.time_base = arena->celulas[pos_vizinha.i][pos_vizinha.j]->base;
+        }    
+
+    return vizinho;
+}
+
+void atualizaVizinhos(Arena* arena){
+  int i, j;
+  Maquina* maq;
+  for ( i = 0 ; i < arena->num_times ; i++ ){
+    for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
+      maq = arena->maquinas[i][j];
+      maq->vizinho_norte = checaVizinho(arena, maq->posicao, NORTE);
+      maq->vizinho_nordeste = checaVizinho(arena, maq->posicao, NORDESTE);
+      maq->vizinho_sudeste = checaVizinho(arena, maq->posicao, SUDESTE);
+      maq->vizinho_sul = checaVizinho(arena, maq->posicao, SUL);
+      maq->vizinho_sudoeste = checaVizinho(arena, maq->posicao, SUDOESTE);
+      maq->vizinho_noroeste = checaVizinho(arena, maq->posicao, NOROESTE);
+    }
+  }
+}
+
 /* chamadas de sistemas da maquina para a arena */
 void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
   int i, j;
@@ -217,6 +246,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
 void atualiza(Arena* arena, int num_instrucoes) {
   int i, j;
   Acao acao;
+  /* executa as instruções */
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
@@ -227,6 +257,8 @@ void atualiza(Arena* arena, int num_instrucoes) {
       }
     }
   }
+
+  atualizaVizinhos(arena);
   arena->tempo++;
 }
 
@@ -251,6 +283,8 @@ Arena* inicializa (int n, int m, int num_times) {
     insereExercito (arena, time);
   return arena;
 }
+
+/* ========================== TESTES =========================== */
 
 
 /* função teste para verificar a inicialização correta da arena */
@@ -283,7 +317,7 @@ int main () {
 
   Arena* arena = inicializa(n, m, times);
 
-  //imprimeCelulas(arena, n, m);
+  imprimeCelulas(arena, n, m);
   //removeExercito(arena, 3);
 
   //removeExercito(arena, 1);

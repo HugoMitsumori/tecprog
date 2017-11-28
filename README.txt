@@ -15,6 +15,10 @@ remove rob <id_rob>: remove o robo de chave <id_robo> do dicionario de robos
 
 <id_robo> <i0> <j0> <if> <jf>: move o robo de id <id_robo> da posição (i0, j0) para a posição (if, jf)
 
+Créditos das sprites:
+- base.png: ©2010-2017 DarkDragonn, https://cardsofwars.deviantart.com/art/Pokemon-tilesheet-2-152608690
+- cristal.png: Kenney - http://kenney.nl/assets/puzzle-pack
+
 
 
 

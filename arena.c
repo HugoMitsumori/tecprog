@@ -154,25 +154,57 @@ void removeExercito(Arena* arena, int time) {
     destroi_maquina(arena->maquinas[time-1][i]);
     arena->maquinas[time-1][i] = NULL;
   }
-
 }
 
-Vizinho* checaVizinho(Arena* arena, Posicao posicao, int direcao){
-    Posicao pos_vizinha = vizinho(posicao, direcao);
+/* Dada uma posicao ocupada, retorna a máquina que a ocupa */
+Maquina* procuraMaquina (Arena* arena, Posicao posicao){
+  int i, j;
+  Maquina* maquina;
+  Celula* celula = arena->celulas[posicao.i][posicao.j];
+  
+  if (celula->ocupado)
+    //Procura a maquina na lista de maquinas
+    for (i = 0; i < arena->num_times; i++)
+      for (j = 0; j < arena->maquinas_por_time; j++)
+        if (arena->maquinas[i][j] &&
+            arena->maquinas[i][j]->posicao.i == posicao.i &&
+            arena->maquinas[i][j]->posicao.j == posicao.j)
+          return arena->maquinas[i][j];           
+
+  return maquina;
+}
+
+/* retorna o vizinho na direção especificada de uma posição da arena */
+Vizinho* checaVizinho ( Arena* arena, Posicao posicao, int direcao ){
+    Posicao pos_vizinha = vizinho( posicao, direcao );
     Vizinho* vizinho;
     vizinho->tipo = PAREDE;
-    if (pos_vizinha.i >= 0 && pos_vizinha.j >= 0 && pos_vizinha.i < arena->n && pos_vizinha.j < arena->m){
-        if (arena->celulas[pos_vizinha.i][pos_vizinha.j]->base > 0)
-          vizinho->tipo = BASE;
-          vizinho->valor.time_base = arena->celulas[pos_vizinha.i][pos_vizinha.j]->base;
-        }    
+    Celula* celula;
+    /* checa se o vizinho está dentro do limite da arena */
+    if ( pos_vizinha.i >= 0 && pos_vizinha.j >= 0 && pos_vizinha.i < arena->n && pos_vizinha.j < arena->m ){
+      celula = arena->celulas[pos_vizinha.i][pos_vizinha.j];
+      if ( celula->base > 0 ){ /* é uma base */
+        vizinho->tipo = BASE;
+        vizinho->valor.time_base = celula->base;
+      } else if ( celula->num_cristais > 0 ){ /* é um deposito de cristais */
+        vizinho->tipo = CRISTAL;
+        vizinho->valor.num_cristais = celula->num_cristais;
+      } else if ( celula->ocupado ){
+        vizinho->tipo = ROBO;
+        vizinho->valor.robo = procuraMaquina(arena, pos_vizinha);
+      } else {
+        vizinho->tipo = VAZIO;
+      }
+    }    
 
     return vizinho;
 }
 
-void atualizaVizinhos(Arena* arena){
+/* atualiza o ponteiro dos vizinhso de todas as máquinas da arena */
+void atualizaVizinhos (Arena* arena){
   int i, j;
   Maquina* maq;
+  printf("atualizando vizinhos\n");
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       maq = arena->maquinas[i][j];
@@ -243,7 +275,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
 }
 
 /* avança um timestep (correspondente ao numero de instrucoes) para todos os robos */
-void atualiza(Arena* arena, int num_instrucoes) {
+void atualiza (Arena* arena, int num_instrucoes) {
   int i, j;
   Acao acao;
   /* executa as instruções */
@@ -288,7 +320,7 @@ Arena* inicializa (int n, int m, int num_times) {
 
 
 /* função teste para verificar a inicialização correta da arena */
-void imprimeCelulas(Arena* arena, int n, int m ) {
+void imprimeCelulas (Arena* arena, int n, int m ) {
   int i, j;
   for ( i = 0 ; i < n ; i++ )
     for ( j  = 0 ; j < m ; j++ )
@@ -308,6 +340,7 @@ void imprimeMaquinas (Arena* arena) {
       }
     }
 }
+
 
 int main () {
   int n, m, times, i, a, b;

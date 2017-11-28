@@ -1,11 +1,16 @@
 Hugo Mitsumori  8941262
 Paulo Araujo    8941112
 
-Fase 3
+Fase 4
 
-A todo momento, são desenhados na tela os objetos contidos das listas de bases e cristais e no dicionário de robôs
+Funcionalidades corrigidas das fases anteriores:
 
-Implementamos a conversa entre o modelo e a apresentação utilizando o seguinte protocolo:
+
+
+
+
+
+Protocolo de comunicação entre arena e display:
 
 rob <caminho_sprite> <id_robo> : adiciona o par (id_robo, Robo) no dicionario de robos 
 base <caminho_sprite> <i> <j> : adiciona a base com a posições dadas na lista de bases

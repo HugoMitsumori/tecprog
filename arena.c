@@ -283,7 +283,6 @@ void atualiza (Arena* arena, int num_instrucoes) {
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
         acao = exec_maquina(arena->maquinas[i][j], num_instrucoes);
-        //printf("Executando instrucao %d\n", acao.tipo);
         if ( acao.tipo != NULO ) /* caso tenha chamada de sistema */
           sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao);
       }
@@ -341,6 +340,19 @@ void imprimeMaquinas (Arena* arena) {
     }
 }
 
+/* funções teste para verificar as chamadas de sistema */
+void testaMovimento(){
+
+}
+
+
+void testaAtaque(){
+
+}
+
+void testaColeta(){}
+
+void testaDeposita(){}
 
 int main () {
   int n, m, times, i, a, b;

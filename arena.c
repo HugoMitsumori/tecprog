@@ -143,16 +143,21 @@ void insereExercito(Arena* arena, int time) {
     insereMaquina(arena, time, vizinho(base, i));
 }
 
+/* remove um maquina especifica */
+void removeMaquina(Arena* arena, int time, int num_maquina){
+  int pos_i, pos_j;
+  pos_i = arena->maquinas[time-1][num_maquina]->posicao.i;
+  pos_j = arena->maquinas[time-1][num_maquina]->posicao.j;
+  arena->celulas[pos_i][pos_j]->ocupado = FALSE;
+  destroi_maquina(arena->maquinas[time-1][num_maquina]);
+  arena->maquinas[time-1][num_maquina] = NULL;
+}
 
 /* remove as maquinas de um time da arena */
 void removeExercito(Arena* arena, int time) {
   int i, pos_i, pos_j;
   for ( i = 0 ; i < arena->maquinas_por_time ; i++ ) {
-    pos_i = arena->maquinas[time-1][i]->posicao.i;
-    pos_j = arena->maquinas[time-1][i]->posicao.j;
-    arena->celulas[pos_i][pos_j]->ocupado = FALSE;
-    destroi_maquina(arena->maquinas[time-1][i]);
-    arena->maquinas[time-1][i] = NULL;
+    removeMaquina(arena, time, i);
   }
 }
 
@@ -207,13 +212,15 @@ void atualizaVizinhos (Arena* arena){
   printf("atualizando vizinhos\n");
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
-      maq = arena->maquinas[i][j];
-      maq->vizinho_norte = checaVizinho(arena, maq->posicao, NORTE);
-      maq->vizinho_nordeste = checaVizinho(arena, maq->posicao, NORDESTE);
-      maq->vizinho_sudeste = checaVizinho(arena, maq->posicao, SUDESTE);
-      maq->vizinho_sul = checaVizinho(arena, maq->posicao, SUL);
-      maq->vizinho_sudoeste = checaVizinho(arena, maq->posicao, SUDOESTE);
-      maq->vizinho_noroeste = checaVizinho(arena, maq->posicao, NOROESTE);
+      if (arena->maquinas[i][j] != NULL){
+        maq = arena->maquinas[i][j];
+        maq->vizinho_norte = checaVizinho(arena, maq->posicao, NORTE);
+        maq->vizinho_nordeste = checaVizinho(arena, maq->posicao, NORDESTE);
+        maq->vizinho_sudeste = checaVizinho(arena, maq->posicao, SUDESTE);
+        maq->vizinho_sul = checaVizinho(arena, maq->posicao, SUL);
+        maq->vizinho_sudoeste = checaVizinho(arena, maq->posicao, SUDOESTE);
+        maq->vizinho_noroeste = checaVizinho(arena, maq->posicao, NOROESTE);
+      }
     }
   }
 }
@@ -354,12 +361,22 @@ void testaExercitos(Arena* arena){
 
 /* funções teste para verificar as chamadas de sistema */
 void testaMovimento(Arena* arena){
+  int i;
+  removeExercito(arena, 1);
+  removeExercito(arena, 2);
+  removeExercito(arena, 3);
+  for (i = 0 ; i < 5 ; i++)
+    removeMaquina(arena, 4, i);
   INSTR programa[] = {
     {SYS, {ACAO, {.acao = {MOVER, SUL}}}},
     {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, NORTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}}
   };
+  arena->maquinas[3][5]->prog = programa;
+  for (i = 0 ; i < 4 ; i++)
+    imprimeMaquinas(arena);
+    atualiza(arena, 1);
 }
 
 
@@ -379,7 +396,7 @@ int main () {
 
   Arena* arena = inicializa(n, m, times);
   
-  testaExercitos(arena);  
+  testaMovimento(arena);
 
   pclose(arena->display);
   return 0;

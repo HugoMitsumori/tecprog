@@ -235,6 +235,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
     case NULO:
       break;
     case MOVER:
+      printf("Movendo maquina %d para (%d, %d) = direcao %d\n", maquina->id, pos_vizinha.i, pos_vizinha.j, direcao);
       if (!cel_vizinha->ocupado) {
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
@@ -289,6 +290,7 @@ void atualiza (Arena* arena, int num_instrucoes) {
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
+        printf("Atualizando\n");
         acao = exec_maquina(arena->maquinas[i][j], num_instrucoes);
         if ( acao.tipo != NULO ) /* caso tenha chamada de sistema */
           sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao);
@@ -374,10 +376,12 @@ void testaMovimento(Arena* arena){
     {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}}
   };
   arena->maquinas[3][5]->prog = programa;
-  for (i = 0 ; i < 4 ; i++)
+  for (i = 0 ; i < 4 ; i++){
     imprimeMaquinas(arena);
     atualiza(arena, 1);
+  }
 }
+
 
 
 void testaAtaque(){

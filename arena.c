@@ -319,11 +319,11 @@ Arena* inicializa (int n, int m, int num_times) {
 
 
 /* função teste para verificar a inicialização correta da arena */
-void imprimeCelulas (Arena* arena, int n, int m ) {
+void imprimeCelulas (Arena* arena) {
   int i, j;
-  for ( i = 0 ; i < n ; i++ )
-    for ( j  = 0 ; j < m ; j++ )
-      if (arena->celulas[i][j]->num_cristais != 0)
+  for ( i = 0 ; i < arena->n ; i++ )
+    for ( j  = 0 ; j < arena->m ; j++ )
+      //if (arena->celulas[i][j]->num_cristais != 0)
         printf("celula[%d][%d] - terreno: %d, cristais: %d, base: %d\n",
          i, j, arena->celulas[i][j]->tipo_terreno, arena->celulas[i][j]->num_cristais,
          arena->celulas[i][j]->base);
@@ -331,6 +331,7 @@ void imprimeCelulas (Arena* arena, int n, int m ) {
 
 /* função teste para verificar a inicialização correta das masquinas */
 void imprimeMaquinas (Arena* arena) {
+  printf("Maquinas atuais:\n");
   for (int i = 0; i < arena->num_times; i++)
     for (int j = 0; j < arena->maquinas_por_time; j++){
       if (arena->maquinas[i][j] != NULL) {
@@ -340,9 +341,25 @@ void imprimeMaquinas (Arena* arena) {
     }
 }
 
-/* funções teste para verificar as chamadas de sistema */
-void testaMovimento(){
+/* testa inclusão e removção de exércitos */
+void testaExercitos(Arena* arena){
+  imprimeMaquinas(arena);
+  int i;
+  for (i = 1 ; i < 4 ; i++){
+    printf("----\nRemovendo exercito %d\n----\n", i);
+    removeExercito(arena, i);
+    imprimeMaquinas(arena);
+  }
+}
 
+/* funções teste para verificar as chamadas de sistema */
+void testaMovimento(Arena* arena){
+  INSTR programa[] = {
+    {SYS, {ACAO, {.acao = {MOVER, SUL}}}},
+    {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, NORTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}}
+  };
 }
 
 
@@ -361,17 +378,9 @@ int main () {
   times = 4;
 
   Arena* arena = inicializa(n, m, times);
+  
+  testaExercitos(arena);  
 
-  imprimeCelulas(arena, n, m);
-  //removeExercito(arena, 3);
-
-  //removeExercito(arena, 1);
-  //imprimeMaquinas(arena);  
-
-
-  for (i = 0 ; i < 4 ; i ++){    
-    atualiza(arena, 1);
-  }
   pclose(arena->display);
   return 0;
 }

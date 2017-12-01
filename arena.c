@@ -209,7 +209,6 @@ Vizinho* checaVizinho ( Arena* arena, Posicao posicao, int direcao ){
 void atualizaVizinhos (Arena* arena){
   int i, j;
   Maquina* maq;
-  printf("atualizando vizinhos\n");
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if (arena->maquinas[i][j] != NULL){
@@ -235,7 +234,6 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
     case NULO:
       break;
     case MOVER:
-      printf("Movendo maquina %d para (%d, %d) = direcao %d\n", maquina->id, pos_vizinha.i, pos_vizinha.j, direcao);
       if (!cel_vizinha->ocupado) {
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
@@ -290,7 +288,6 @@ void atualiza (Arena* arena, int num_instrucoes) {
   for ( i = 0 ; i < arena->num_times ; i++ ){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if ( arena->maquinas[i][j] != NULL && arena->maquinas[i][j]->id != 0) {
-        printf("Atualizando\n");
         acao = exec_maquina(arena->maquinas[i][j], num_instrucoes);
         if ( acao.tipo != NULO ) /* caso tenha chamada de sistema */
           sistema(arena, arena->maquinas[i][j], acao.tipo, acao.direcao);
@@ -364,6 +361,7 @@ void testaExercitos(Arena* arena){
 /* funções teste para verificar as chamadas de sistema */
 void testaMovimento(Arena* arena){
   int i;
+  Maquina* maquina;
   removeExercito(arena, 1);
   removeExercito(arena, 2);
   removeExercito(arena, 3);
@@ -371,13 +369,18 @@ void testaMovimento(Arena* arena){
     removeMaquina(arena, 4, i);
   INSTR programa[] = {
     {SYS, {ACAO, {.acao = {MOVER, SUL}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, NORTE}}}},
-    {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}}
+    {SYS, {ACAO, {.acao = {MOVER, NORDESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}}
   };
-  arena->maquinas[3][5]->prog = programa;
-  for (i = 0 ; i < 4 ; i++){
+  maquina = arena->maquinas[3][5];
+  maquina->prog = programa;
+
+  for (i = 0 ; i < 6 ; i++){    
     imprimeMaquinas(arena);
+    printf("Maquina %d moveu para direcao %d\n", maquina->id, maquina->prog[maquina->ip].op.valor.acao.direcao);
     atualiza(arena, 1);
   }
 }

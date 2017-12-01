@@ -209,7 +209,7 @@ Acao exec_maquina(Maquina *m, int n) {
     case STO:
       m->Mem[operando.valor.n] = desempilha(pil);
       break;
-          case RCL:
+    case RCL:
       empilha(pil,m->Mem[operando.valor.n]);
       break;
     case END:
@@ -248,6 +248,7 @@ Acao exec_maquina(Maquina *m, int n) {
       break;
     case SYS:
       if (operando.tipo == ACAO){
+        ip++;
         return operando.valor.acao;
       }
       break;

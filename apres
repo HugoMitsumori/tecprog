@@ -94,6 +94,10 @@ class Cristal(pg.sprite.Sprite):
         # desenha
         scr.blit(s.image, s.rect)
 
+    def setQuantidade(s, quantidade):
+        s.quantidade = quantidade
+        s.image = pg.image.load("{}c.png".format(quantidade))
+        s.rect = s.image.get_rect()
 
 
 class cell:
@@ -162,12 +166,11 @@ def drawAll():
 def recolheCristais(i, j):
     for cristal in cristais:
         if cristal.i == i and cristal.j == j:
+            arena[cristal.i][cristal.j].draw()
             if cristal.quantidade > 1:
-                cristal.quantidade -= 1
-                cristal.image = pg.image.load("{}c.png".format(cristal.quantidade))
+                cristal.setQuantidade(cristal.quantidade - 1)
                 print("Tentando recolher cristal")
             else:
-                arena[cristal.i][cristal.j].draw()
                 cristais.remove(cristal)
 
 

@@ -452,15 +452,23 @@ void testaColeta(Arena* arena){
     {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
     {SYS, {ACAO, {.acao = {RECOLHER, OESTE}}}},
-    {SYS, {ACAO, {.acao = {RECOLHER, OESTE}}}},
-    {SYS, {ACAO, {.acao = {RECOLHER, OESTE}}}}
+    {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, SUDOESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, SUDESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, NORDESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, NOROESTE}}}},
   };
   maq1->prog = programa1;
   if (arena->celulas[14][11]->num_cristais < 5){
     arena->celulas[14][11]->num_cristais = 5;
     fprintf(arena->display, "cristal 5 %d %d\n", 14, 11);
   }
-  for (i = 0 ; i < 7 ; i++)
+  for (i = 0 ; i < 14 ; i++)
     atualiza(arena, 1);
 }
 

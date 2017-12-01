@@ -150,10 +150,9 @@ void removeMaquina(Arena* arena, int id){
   /* calcula posicoes da maquina na array */
   int time = id/100;
   int num_maquina = id - time*100 - 1;
-  printf("Removendo maquina %d, time %d, num %d\n", id, time, num_maquina);
   pos_i = arena->maquinas[time-1][num_maquina]->posicao.i;
   pos_j = arena->maquinas[time-1][num_maquina]->posicao.j;
-  printf("Removendo maquina da posicao (%d, %d)\n", pos_i, pos_j);
+  fprintf(arena->display, "remove rob %d %d %d\n", id, pos_i, pos_j);
   arena->celulas[pos_i][pos_j]->ocupado = FALSE;
   destroi_maquina(arena->maquinas[time-1][num_maquina]);
   arena->maquinas[time-1][num_maquina] = NULL;
@@ -246,7 +245,6 @@ void atacar (Arena* arena, Maquina* maquina, int direcao){
 
     if (atacada->vida <= 0) {
       printf("maquina %d morreu\n", atacada->id);
-      fprintf(arena->display, "remove rob %d\n", atacada->id);
       removeMaquina(arena, atacada->id);
     }
   }
@@ -427,11 +425,14 @@ void testaAtaque(Arena* arena){
     {SYS, {ACAO, {.acao = {ATACAR, OESTE}}}},
     {SYS, {ACAO, {.acao = {ATACAR, OESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
-    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}}
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
   };
   maq1->prog = programa1;
   maq2->prog = programa2;
-  for (i = 0 ; i < 9 ; i++){
+  for (i = 0 ; i < 12 ; i++){
     atualiza(arena, 1);
     imprimeMaquinas(arena);
   }

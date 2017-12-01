@@ -6,6 +6,7 @@ Fase 4
 Funcionalidades corrigidas das fases anteriores:
 
 - Testes de movimento (Fase 2)
+- Testes de ataque (Fase 2)
 - Correção das direções de acordo com o hexágono desenhado (Fase 3)
 
 
@@ -16,7 +17,7 @@ rob <caminho_sprite> <id_robo> : adiciona o par (id_robo, Robo) no dicionario de
 base <caminho_sprite> <i> <j> : adiciona a base com a posições dadas na lista de bases
 cristal <caminho_sprite> <i> <j> : adiciona os cristais com a posições dadas na lista de cristais
 
-remove rob <id_rob>: remove o robo de chave <id_robo> do dicionario de robos
+remove rob <id_rob> <posicao_i> <posicao_j>: remove o robo de chave <id_robo> do dicionario de robos e desenha a celula sobre a posição
 
 <id_robo> <i0> <j0> <if> <jf>: move o robo de id <id_robo> da posição (i0, j0) para a posição (if, jf)
 

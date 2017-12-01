@@ -147,6 +147,7 @@ def drawAll():
     # redesenha a célula original (apaga o robô)
     if 0 <= oi  < W and 0 <= oj < H:
         arena[oi][oj].draw()
+
     # desenha o robô na célula de destino
     if 0 <= di  < W and 0 <= dj < H and ri in robs:
         robs[ri].draw(di,dj)
@@ -184,8 +185,9 @@ for line in fileinput.input():
         continue
 
     if r[0] == 'remove':
-        if r[1] == 'rob':
+        if r[1] == 'rob':            
             del robs[int(r[2])]
+            arena[int(r[3])][int(r[4])].draw()
         continue
 
     ri, oi, oj, di, dj = list(map(int, r))

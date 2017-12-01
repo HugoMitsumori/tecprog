@@ -94,11 +94,12 @@ Maquina*** inicializaMaquinas(int num_times, int maquinas_por_time, INSTR *instr
 
 /* comportamento basico das maquinas */
 INSTR programa[] = {
-  {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
-  {SYS, {ACAO, {.acao = {MOVER, SUL}}}},
+  {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
+  {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}},
+  {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
   {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
   {SYS, {ACAO, {.acao = {MOVER, NORDESTE}}}},
-  {SYS, {ACAO, {.acao = {MOVER, SUL}}}},
+  {SYS, {ACAO, {.acao = {MOVER, LESTE}}}}
 };
 
 /* instancia uma nova maquina na posição definida */
@@ -213,11 +214,11 @@ void atualizaVizinhos (Arena* arena){
     for ( j = 0 ; j < arena->maquinas_por_time ; j++ ) {
       if (arena->maquinas[i][j] != NULL){
         maq = arena->maquinas[i][j];
-        maq->vizinho_norte = checaVizinho(arena, maq->posicao, NORTE);
         maq->vizinho_nordeste = checaVizinho(arena, maq->posicao, NORDESTE);
+        maq->vizinho_leste = checaVizinho(arena, maq->posicao, LESTE);
         maq->vizinho_sudeste = checaVizinho(arena, maq->posicao, SUDESTE);
-        maq->vizinho_sul = checaVizinho(arena, maq->posicao, SUL);
         maq->vizinho_sudoeste = checaVizinho(arena, maq->posicao, SUDOESTE);
+        maq->vizinho_oeste = checaVizinho(arena, maq->posicao, OESTE);
         maq->vizinho_noroeste = checaVizinho(arena, maq->posicao, NOROESTE);
       }
     }
@@ -368,12 +369,12 @@ void testaMovimento(Arena* arena){
   for (i = 0 ; i < 5 ; i++)
     removeMaquina(arena, 4, i);
   INSTR programa[] = {
-    {SYS, {ACAO, {.acao = {MOVER, SUL}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
-    {SYS, {ACAO, {.acao = {MOVER, NORTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, NORDESTE}}}},
-    {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}}
   };
   maquina = arena->maquinas[3][5];
   maquina->prog = programa;

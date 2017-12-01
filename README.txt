@@ -5,8 +5,8 @@ Fase 4
 
 Funcionalidades corrigidas das fases anteriores:
 
-
-
+- Testes de movimento (Fase 2)
+- Correção das direções de acordo com o hexágono desenhado (Fase 3)
 
 
 

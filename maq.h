@@ -15,11 +15,11 @@ typedef struct {
   int rbp;
   Posicao posicao;
   int num_cristais;
-  struct vizinho* vizinho_norte;
   struct vizinho* vizinho_nordeste;
+  struct vizinho* vizinho_leste;
   struct vizinho* vizinho_sudeste;
-  struct vizinho* vizinho_sul;
   struct vizinho* vizinho_sudoeste;
+  struct vizinho* vizinho_oeste;
   struct vizinho* vizinho_noroeste;
 } Maquina;
 

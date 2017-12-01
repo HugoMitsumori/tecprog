@@ -8,29 +8,41 @@
 Posicao vizinho(Posicao local, int direcao) {
   Posicao pos;
   switch (direcao) {
-    case NORTE:
-      pos.i = local.i - 1;
-      pos.j = local.j;
-      break;
     case NORDESTE:
+      pos.i = local.i - 1;
+      if (local.i % 2 == 0)        
+        pos.j = local.j;
+      else
+        pos.j = local.j + 1;
+      break;
+    case LESTE:
       pos.i = local.i;
       pos.j = local.j + 1;
       break;
-    case SUDESTE:
+    case SUDESTE:          
       pos.i = local.i + 1;
-      pos.j = local.j + 1;
-      break;
-    case SUL:
-      pos.i = local.i + 1;
-      pos.j = local.j;
+      if (local.i % 2 == 0)
+        pos.j = local.j;
+      else
+        pos.j = local.j + 1;
       break;
     case SUDOESTE:
       pos.i = local.i + 1;
+      if (local.i % 2 == 0)
+        pos.j = local.j - 1;
+      else
+        pos.j = local.j;
+      break;
+    case OESTE:
+      pos.i = local.i;
       pos.j = local.j - 1;
       break;
     case NOROESTE:
-      pos.i = local.i;
-      pos.j = local.j - 1;
+      pos.i = local.i - 1;
+      if (local.i % 2 == 0)
+        pos.j = local.j - 1;
+      else
+        pos.j = local.j;
       break;
   }
   return pos;

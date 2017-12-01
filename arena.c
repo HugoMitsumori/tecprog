@@ -278,9 +278,11 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
       }
       break;
     case DEPOSITAR:
-      if (maquina->num_cristais > 0){
+      if (maquina->num_cristais > 0){        
         maquina->num_cristais--;
         cel_vizinha->num_cristais++;
+        if (cel_vizinha->num_cristais >= 5) 
+          printf("======\nTime %d venceu a partida!!\n======\n", maquina->time);
       }
       break;
     case ATACAR:
@@ -472,7 +474,35 @@ void testaColeta(Arena* arena){
     atualiza(arena, 1);
 }
 
-void testaDeposita(){}
+void testaDeposita(Arena* arena){
+  int i;
+  removeExercito(arena, 1);
+  removeExercito(arena, 2);
+  removeExercito(arena, 3);
+  for (i = 0 ; i < 5 ; i++){
+    removeMaquina(arena, 400 + i + 1);
+  }
+  Maquina* maquina = arena->maquinas[3][5];
+  maquina->num_cristais = 5;
+  INSTR programa[] = {
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {DEPOSITAR, SUDOESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
+    {SYS, {ACAO, {.acao = {DEPOSITAR, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDOESTE}}}},
+    {SYS, {ACAO, {.acao = {DEPOSITAR, NOROESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {DEPOSITAR, NORDESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, NOROESTE}}}},
+    {SYS, {ACAO, {.acao = {DEPOSITAR, LESTE}}}}    
+  };
+  maquina->prog = programa;
+  for (i = 0 ; i < 10 ; i++){
+    atualiza(arena, 1);
+    printf("maquina %d, numero de cristais: %d\n", maquina->id, maquina->num_cristais);
+    printf("base 4, numero de cristais: %d\n", arena->celulas[15][15]->num_cristais);
+  }
+}
 
 int main () {
   int n, m, times, i, a, b;
@@ -484,7 +514,8 @@ int main () {
   
   //testaMovimento(arena);
   //testaAtaque(arena);
-  testaColeta(arena);
+  //testaColeta(arena);
+  testaDeposita(arena);
   pclose(arena->display);
   return 0;
 }

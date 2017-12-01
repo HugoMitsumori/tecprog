@@ -7,6 +7,8 @@ Funcionalidades corrigidas das fases anteriores:
 
 - Testes de movimento (Fase 2)
 - Testes de ataque (Fase 2)
+- Testes de recolher cristal (Fase 2)
+- Testes de depositar cristal na base (Fase 2)
 - Correção das direções de acordo com o hexágono desenhado (Fase 3)
 
 

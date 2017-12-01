@@ -77,9 +77,10 @@ class Base(pg.sprite.Sprite):
         scr.blit(s.image, s.rect)
 
 class Cristal(pg.sprite.Sprite):
-    def __init__(s, img, i, j):
+    def __init__(s, quantidade, i, j):
         pg.sprite.Sprite.__init__(s)
-        s.image = pg.image.load(img)
+        s.quantidade = quantidade
+        s.image = pg.image.load("{}c.png".format(quantidade))
         s.rect = s.image.get_rect()
         s.i = i
         s.j = j
@@ -158,6 +159,17 @@ def drawAll():
     for cristal in cristais:
         cristal.draw()
 
+def recolheCristais(i, j):
+    for cristal in cristais:
+        if cristal.i == i and cristal.j == j:
+            if cristal.quantidade > 1:
+                cristal.quantidade -= 1
+                cristal.image = pg.image.load("{}c.png".format(cristal.quantidade))
+                print("Tentando recolher cristal")
+            else:
+                arena[cristal.i][cristal.j].draw()
+                cristais.remove(cristal)
+
 
 
 # Leitura dos comandos pela entrada padrão ou de um arquivo
@@ -181,13 +193,17 @@ for line in fileinput.input():
         continue
 
     if r[0] == 'cristal':
-        cristais.append(Cristal(r[1], int(r[2]), int(r[3])))
+        cristais.append(Cristal(int(r[1]), int(r[2]), int(r[3])))
         continue
 
     if r[0] == 'remove':
         if r[1] == 'rob':            
             del robs[int(r[2])]
             arena[int(r[3])][int(r[4])].draw()
+        continue
+
+    if r[0] == 'recolhe':
+        recolheCristais(int(r[1]), int(r[2]))
         continue
 
     ri, oi, oj, di, dj = list(map(int, r))

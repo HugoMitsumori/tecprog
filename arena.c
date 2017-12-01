@@ -69,7 +69,7 @@ Celula*** inicializaCelulas (int n, int m, int num_times, FILE* display) {
       distancia_ij(bases[1], i, j) <= 2 || distancia_ij(bases[2], i, j) <= 2
       || distancia_ij(bases[3], i, j) <= 2) continue;    
     arena[i][j]->num_cristais = (rand_num = rand() % 5) + 1;
-    fprintf(display, "cristal %dc.png %d %d\n", arena[i][j]->num_cristais, i, j);
+    fprintf(display, "cristal %d %d %d\n", arena[i][j]->num_cristais, i, j);
     f++;
   }
 
@@ -262,19 +262,19 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
     case NULO:
       break;
     case MOVER:      
-      if (!cel_vizinha->ocupado) {
+      if (cel_vizinha != NULL && !cel_vizinha->ocupado) {
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
         fprintf(arena->display, "%d %d %d %d %d\n", maquina->id, maquina->posicao.i, maquina->posicao.j, pos_vizinha.i, pos_vizinha.j);
         maquina->posicao.i = pos_vizinha.i;
         maquina->posicao.j = pos_vizinha.j;
-      }
-      printf("Máquina %d moveu para (%d, %d)\n", maquina->id, pos_vizinha.i, pos_vizinha.j);
+      }      
       break;
     case RECOLHER:
       if (cel_vizinha->num_cristais > 0){
         cel_vizinha->num_cristais--;
         maquina->num_cristais++;
+        fprintf(arena->display, "recolhe %d %d\n", pos_vizinha.i, pos_vizinha.j);
       }
       break;
     case DEPOSITAR:
@@ -432,14 +432,37 @@ void testaAtaque(Arena* arena){
   };
   maq1->prog = programa1;
   maq2->prog = programa2;
-  for (i = 0 ; i < 12 ; i++){
+  for (i = 0 ; i < 12 ; i++)
     atualiza(arena, 1);
-    imprimeMaquinas(arena);
-  }
-
 }
 
-void testaColeta(){}
+void testaColeta(Arena* arena){
+  int i;
+  Maquina *maq1, *maq2;
+  imprimeMaquinas(arena);
+  removeExercito(arena, 1);
+  removeExercito(arena, 2);
+  removeExercito(arena, 3);
+  for (i = 0 ; i < 5 ; i++){
+    removeMaquina(arena, 400 + i + 1);
+  }
+  maq1 = arena->maquinas[3][5];
+  INSTR programa1[] = {
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {RECOLHER, OESTE}}}}
+  };
+  maq1->prog = programa1;
+  if (arena->celulas[14][11]->num_cristais < 5){
+    arena->celulas[14][11]->num_cristais = 5;
+    fprintf(arena->display, "cristal 5 %d %d\n", 14, 11);
+  }
+  for (i = 0 ; i < 7 ; i++)
+    atualiza(arena, 1);
+}
 
 void testaDeposita(){}
 
@@ -452,7 +475,8 @@ int main () {
   Arena* arena = inicializa(n, m, times);
   
   //testaMovimento(arena);
-  testaAtaque(arena);
+  //testaAtaque(arena);
+  testaColeta(arena);
   pclose(arena->display);
   return 0;
 }

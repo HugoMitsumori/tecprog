@@ -186,6 +186,7 @@ for line in fileinput.input():
     if r[0] == 'remove':
         if r[1] == 'rob':
             del robs[int(r[2])]
+        continue
 
     ri, oi, oj, di, dj = list(map(int, r))
 

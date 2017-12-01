@@ -145,10 +145,15 @@ void insereExercito(Arena* arena, int time) {
 }
 
 /* remove um maquina especifica */
-void removeMaquina(Arena* arena, int time, int num_maquina){
+void removeMaquina(Arena* arena, int id){
   int pos_i, pos_j;
+  /* calcula posicoes da maquina na array */
+  int time = id/100;
+  int num_maquina = id - time*100 - 1;
+  printf("Removendo maquina %d, time %d, num %d\n", id, time, num_maquina);
   pos_i = arena->maquinas[time-1][num_maquina]->posicao.i;
   pos_j = arena->maquinas[time-1][num_maquina]->posicao.j;
+  printf("Removendo maquina da posicao (%d, %d)\n", pos_i, pos_j);
   arena->celulas[pos_i][pos_j]->ocupado = FALSE;
   destroi_maquina(arena->maquinas[time-1][num_maquina]);
   arena->maquinas[time-1][num_maquina] = NULL;
@@ -158,7 +163,7 @@ void removeMaquina(Arena* arena, int time, int num_maquina){
 void removeExercito(Arena* arena, int time) {
   int i, pos_i, pos_j;
   for ( i = 0 ; i < arena->maquinas_por_time ; i++ ) {
-    removeMaquina(arena, time, i);
+    removeMaquina(arena, time*100 + i + 1);
   }
 }
 
@@ -225,16 +230,40 @@ void atualizaVizinhos (Arena* arena){
   }
 }
 
+void atacar (Arena* arena, Maquina* maquina, int direcao){
+  int i, j;
+  Maquina* atacada;
+  Posicao pos_vizinha = vizinho(maquina->posicao, direcao);
+  Celula* cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
+  printf("Máquina %d atacando na direcao %d\n", maquina->id, direcao);
+
+  //Verifica se existe uma maquina na posicao a ser atacada  
+  if (cel_vizinha->ocupado){
+    //Procura a maquina vizinha, na lista de maquinas    
+    atacada = procuraMaquina(arena, pos_vizinha);
+
+    atacada->vida -= maquina->dano;
+
+    if (atacada->vida <= 0) {
+      printf("maquina %d morreu\n", atacada->id);
+      fprintf(arena->display, "remove rob %d\n", atacada->id);
+      removeMaquina(arena, atacada->id);
+    }
+  }
+  else printf ("Não tem máquinas para atacar nessa direcao\n");
+}
+
 /* chamadas de sistemas da maquina para a arena */
 void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
   int i, j;
   Posicao pos_vizinha = vizinho(maquina->posicao, direcao);
   Celula* cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
   Celula* atual = arena->celulas[maquina->posicao.i][maquina->posicao.j];
+  Maquina* maq;
   switch (tipo) {
     case NULO:
       break;
-    case MOVER:
+    case MOVER:      
       if (!cel_vizinha->ocupado) {
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
@@ -242,6 +271,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
         maquina->posicao.i = pos_vizinha.i;
         maquina->posicao.j = pos_vizinha.j;
       }
+      printf("Máquina %d moveu para (%d, %d)\n", maquina->id, pos_vizinha.i, pos_vizinha.j);
       break;
     case RECOLHER:
       if (cel_vizinha->num_cristais > 0){
@@ -256,27 +286,7 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
       }
       break;
     case ATACAR:
-      //Verifica se existe uma maquina na posicao a ser atacada
-      if (cel_vizinha->ocupado){
-      //Procura a maquina vizinha, na lista de maquinas
-        for (i = 0; i < arena->num_times; i++)
-          for (j = 0; j < arena->maquinas_por_time; j++)
-            if (arena->maquinas[i][j] &&
-                arena->maquinas[i][j]->posicao.i == pos_vizinha.i &&
-                arena->maquinas[i][j]->posicao.j == pos_vizinha.j){
-              //Ataca maquina vizinha
-              arena->maquinas[i][j]->vida--;
-              arena->maquinas[i][j]->dano++;
-              //Se maquina vizinha morreu, remove-a da lista e da celula vizinha
-              if (arena->maquinas[i][j]->vida == 0){
-                printf("maquina %d morreu\n", arena->maquinas[i][j]->id);
-                fprintf(arena->display, "remove rob %d\n", arena->maquinas[i][j]->id);
-                arena->maquinas[i][j] = NULL;
-                cel_vizinha->ocupado = 0;
-              }
-            }
-      }
-      else puts ("Nao tem ninguem ali\n");
+      atacar(arena, maquina, direcao);
       break;
   }
 }
@@ -367,7 +377,7 @@ void testaMovimento(Arena* arena){
   removeExercito(arena, 2);
   removeExercito(arena, 3);
   for (i = 0 ; i < 5 ; i++)
-    removeMaquina(arena, 4, i);
+    removeMaquina(arena, 400 + i + 1);
   INSTR programa[] = {
     {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
     {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
@@ -386,9 +396,45 @@ void testaMovimento(Arena* arena){
   }
 }
 
-
-
-void testaAtaque(){
+void testaAtaque(Arena* arena){
+  int i;
+  Maquina *maq1, *maq2;
+  imprimeMaquinas(arena);
+  removeExercito(arena, 1);
+  removeExercito(arena, 2);
+  for (i = 0 ; i < 5 ; i++){
+    removeMaquina(arena, 300 + i + 1);
+    removeMaquina(arena, 400 + i + 1);
+  }
+  maq1 = arena->maquinas[2][5];
+  maq2 = arena->maquinas[3][5];
+  INSTR programa1[] = {
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}},
+    {SYS, {ACAO, {.acao = {ATACAR, LESTE}}}},
+    {SYS, {ACAO, {.acao = {ATACAR, LESTE}}}},
+    {SYS, {ACAO, {.acao = {ATACAR, LESTE}}}}
+  };
+  INSTR programa2[] = {
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, OESTE}}}},
+    {SYS, {ACAO, {.acao = {ATACAR, OESTE}}}},
+    {SYS, {ACAO, {.acao = {ATACAR, OESTE}}}},
+    {SYS, {ACAO, {.acao = {ATACAR, OESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, SUDESTE}}}},
+    {SYS, {ACAO, {.acao = {MOVER, LESTE}}}}
+  };
+  maq1->prog = programa1;
+  maq2->prog = programa2;
+  for (i = 0 ; i < 9 ; i++){
+    atualiza(arena, 1);
+    imprimeMaquinas(arena);
+  }
 
 }
 
@@ -404,8 +450,8 @@ int main () {
 
   Arena* arena = inicializa(n, m, times);
   
-  testaMovimento(arena);
-
+  //testaMovimento(arena);
+  testaAtaque(arena);
   pclose(arena->display);
   return 0;
 }

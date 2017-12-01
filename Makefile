@@ -1,7 +1,7 @@
 #
 # Makefile
 
-CFLAGS = -std=c99 -O2
+CFLAGS = -std=c99 -g2 -O2
 
 .PHONY: clean
 

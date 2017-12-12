@@ -32,7 +32,9 @@ typedef enum {
   FRE,
   ALC,
   ATR,
-  SYS
+  SYS,
+  ENTRY,
+  LEAVE
 } OpCode;
 
 /* Tipos dos operandos */

@@ -42,7 +42,9 @@ char *CODES[] = {
   "FRE",
   "ALC",
   "ATR",
-  "SYS"
+  "SYS",
+  "ENTRY",
+  "LEAVE"
 };
 #else
 #  define D(X)
@@ -69,6 +71,20 @@ Maquina *cria_maquina(INSTR *p) {
 
 void destroi_maquina(Maquina *m) {
   free(m);
+}
+
+int new_frame(Maquina *m, int n) {
+  int ibc = m->ib;
+  if (ibc < MAXFRM-1) {
+  m->bp[++m->ib] = n+ibc;
+  return m->ib;
+  }
+  return -1;
+}
+
+int del_frame(Maquina *m) {
+  if (m->ib > 0) return --m->ib;
+  return -1;
 }
 
 /* Alguns macros para facilitar a leitura do código */
@@ -253,6 +269,12 @@ Acao exec_maquina(Maquina *m, int n) {
         return operando.valor.acao;
       }
       break;
+    case ENTRY:
+      new_frame(m, operando.valor.n);
+      break;    
+    case LEAVE:
+      del_frame(m);
+      break;      
     }
     D(puts("Pilha de dados:") );
     D(imprime(pil,5));

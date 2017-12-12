@@ -5,10 +5,10 @@
 #include <time.h>
 #include <unistd.h>
 
-
+#include "compila.tab.h"
 #include "arena.h"
 
-
+int compilador(FILE *, INSTR *);
 
 /* ---------------------------   Celulas -----------------------------------*/
 
@@ -76,17 +76,14 @@ Celula*** inicializaCelulas (int n, int m, int num_times, FILE* display) {
   return arena;
 }
 
+void insereExercito(Arena* arena, int time);
 
 /* alloca memoria para as maquinas do jogo */
 Maquina*** inicializaMaquinas(int num_times, int maquinas_por_time, INSTR *instrucoes) {
   int i, j;
   Maquina*** maquinas = (Maquina***) calloc ( num_times, sizeof(Maquina**) );
-  for ( i = 0 ; i < num_times ; i++ ) {
+  for ( i = 0 ; i < num_times ; i++ ) 
     maquinas[i] = (Maquina**) calloc ( maquinas_por_time, sizeof (Maquina*) );
-    for ( j = 0 ; j < maquinas_por_time ; j++ ) {
-      maquinas[i][j] = cria_maquina(instrucoes);
-    }
-  }
   return maquinas;
 }
 
@@ -105,23 +102,35 @@ INSTR programa[] = {
 /* instancia uma nova maquina na posição definida */
 /* TODO: receber instrucoes como parametro? */
 void insereMaquina (Arena* arena, int time, Posicao pos) {
-  int i;
+  int i, res;
   /* cria a maquina na primeira posicao livre da linha */
-  for ( i = 0 ; i < arena->maquinas_por_time ; i++ ) {
-    if ( arena->maquinas[time-1][i] == NULL ) /* aloca espaço se necessário */
-      arena->maquinas[time-1][i] = cria_maquina(programa);
-    if ( arena->maquinas[time-1][i]->id == 0 ) { /* senão, só setta as variaveis */
-      arena->maquinas[time-1][i]->id = time * 100 + i + 1;
-      arena->maquinas[time-1][i]->time = time;
-      arena->maquinas[time-1][i]->posicao.i = pos.i;
-      arena->maquinas[time-1][i]->posicao.j = pos.j;
-      arena->celulas[pos.i][pos.j]->ocupado = 1;
-      arena->celulas[pos.i][pos.j]->num_cristais = 0;
-      fprintf(arena->display, "rob GILEAD_A.png %d\n", arena->maquinas[time-1][i]->id);
-      return;
+  INSTR prog[1000];
+  FILE *codigo;
+  char arquivo[9];
+  sprintf(arquivo, "programa%d", time);
+  codigo = fopen(arquivo, "r");
+  if (codigo == NULL)
+    codigo = fopen("programa", "r");
+  res = compilador(codigo, prog);
+  if (res == 1) /* se o arquivo for válido, temos res = 0 */
+    printf("Erro ao carregar instruções do robô!\n");
+  else {
+    for ( i = 0 ; i < arena->maquinas_por_time ; i++ ) {
+      if ( arena->maquinas[time-1][i] == NULL ) /* aloca espaço se necessário */      
+        arena->maquinas[time-1][i] = cria_maquina(prog);
+      if ( arena->maquinas[time-1][i]->id == 0 ) { /* senão, só setta as variaveis */
+        arena->maquinas[time-1][i]->id = time * 100 + i + 1;
+        arena->maquinas[time-1][i]->time = time;
+        arena->maquinas[time-1][i]->posicao.i = pos.i;
+        arena->maquinas[time-1][i]->posicao.j = pos.j;
+        arena->celulas[pos.i][pos.j]->ocupado = 1;
+        arena->celulas[pos.i][pos.j]->num_cristais = 0;
+        fprintf(arena->display, "rob GILEAD_A.png %d\n", arena->maquinas[time-1][i]->id);
+        return;
+      }
     }
+    printf("Não há mais espaço para novas máquinas nesse time!");
   }
-  printf("Não há mais espaço para novas máquinas nesse time!");
 }
 
 /* insere as maquinas de um novo time na arena */
@@ -515,7 +524,8 @@ int main () {
   //testaMovimento(arena);
   //testaAtaque(arena);
   //testaColeta(arena);
-  testaDeposita(arena);
+  //testaDeposita(arena);
+  for (i = 0 ; i < 10 ; i++) atualiza(arena, 1);
   pclose(arena->display);
   return 0;
 }

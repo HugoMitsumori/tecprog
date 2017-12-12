@@ -1,6 +1,7 @@
 #include "pilha.h"
 
 #define MAXMEM 100
+#define MAXFRM 30
 
 typedef struct {
   int id;
@@ -13,6 +14,8 @@ typedef struct {
   INSTR *prog;
   int ip;
   int rbp;
+  int bp[MAXFRM];
+  int ib;
   Posicao posicao;
   int num_cristais;
   struct vizinho* vizinho_nordeste;

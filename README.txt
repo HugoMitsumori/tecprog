@@ -16,7 +16,7 @@ Funcionalidades corrigidas das fases anteriores:
 Funcionalidades novas (Fase 4):
 
 - Integração da linguagem nova com a arena
-- 
+- Implementação dos comandos mover, atacar, recolher e depositar na linguagem nova
 
 
 * O robô será criado por padrão com as instruções contidas nos arquivos "programa1", "programa2", "programa3" e "progrma4",

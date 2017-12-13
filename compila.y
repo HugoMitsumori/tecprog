@@ -167,9 +167,18 @@ Acao:
 		{
 			AddAcao(MOVER, direcao($3));
 		}
-		| ATACARt
-		| DEPOSITARt
-		| RECOLHERt
+		| ATACARt OPEN ID CLOSE EOL
+		{
+			AddAcao(ATACAR, direcao($3));
+		}
+		| DEPOSITARt OPEN ID CLOSE EOL
+		{
+			AddAcao(DEPOSITAR, direcao($3));
+		}
+		| RECOLHERt OPEN ID CLOSE EOL
+		{
+			AddAcao(RECOLHER, direcao($3));
+		}
 
 Args: 
 	| ID {

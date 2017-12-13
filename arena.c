@@ -108,9 +108,11 @@ void insereMaquina (Arena* arena, int time, Posicao pos) {
   FILE *codigo;
   char arquivo[9];
   sprintf(arquivo, "programa%d", time);
-  codigo = fopen(arquivo, "r");
-  if (codigo == NULL)
+  codigo = fopen(arquivo, "r");  
+  if (codigo == NULL){
+    printf("%s não existe, carregando programa padrão\n", arquivo);
     codigo = fopen("programa", "r");
+  }
   res = compilador(codigo, prog);
   if (res == 1) /* se o arquivo for válido, temos res = 0 */
     printf("Erro ao carregar instruções do robô!\n");
@@ -525,7 +527,7 @@ int main () {
   //testaAtaque(arena);
   //testaColeta(arena);
   //testaDeposita(arena);
-  for (i = 0 ; i < 10 ; i++) atualiza(arena, 5);
+  for (i = 0 ; i < 10 ; i++) atualiza(arena, 1);
   pclose(arena->display);
   return 0;
 }

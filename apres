@@ -214,7 +214,7 @@ for line in fileinput.input():
     drawAll()
 
     # tempo de espera para atualização, apenas para testes
-    pg.time.wait(300)
+    pg.time.wait(100)
 
     atu()
 

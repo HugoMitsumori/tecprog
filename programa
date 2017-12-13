@@ -1,12 +1,6 @@
-x = 14;
-
-def resp(x,y) {
-  print(x);
-  print(y);
-  ret (x*y);
-}
-
-print(x);
-z = 2;
-
-print(resp(x,3));
+mover(LESTE);
+mover(SUDESTE);
+mover(SUDOESTE);
+mover(OESTE);
+mover(NOROESTE);
+mover(NORDESTE);

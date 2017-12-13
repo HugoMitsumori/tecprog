@@ -28,7 +28,7 @@ lex.yy.o: compila.l
 	gcc -c lex.yy.c -std=c99
 
 clean:
-	rm -f *.o *~ ep2
+	rm -f *.o *~ ep2 \#*\#
 
 run: 
 	./ep2

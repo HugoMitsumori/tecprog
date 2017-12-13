@@ -268,7 +268,8 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
   int i, j;
   Posicao pos_vizinha = vizinho(maquina->posicao, direcao);
   Celula* cel_vizinha = NULL;
-  if (pos_vizinha.i >= 0 && pos_vizinha.j >=0)
+  if (pos_vizinha.i >= 0 && pos_vizinha.j >=0 &&
+      pos_vizinha.i < arena->n && pos_vizinha.j < arena->m)
     cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
   Celula* atual = arena->celulas[maquina->posicao.i][maquina->posicao.j];
   Maquina* maq;

@@ -10,8 +10,18 @@ Funcionalidades corrigidas das fases anteriores:
 - Testes de recolher cristal (Fase 2)
 - Testes de depositar cristal na base (Fase 2)
 - Correção das direções de acordo com o hexágono desenhado (Fase 3)
+- Controle de visualização de cristais e removação do robô (Fase 3)
 
 
+Funcionalidades novas (Fase 4):
+
+- Integração da linguagem nova com a arena
+- 
+
+
+* O robô será criado por padrão com as instruções contidas nos arquivos "programa1", "programa2", "programa3" e "progrma4",
+relativo aos times (time 1 carrega programa1, e assim em diante)
+Caso não existe o arquivo específico do time, irá carregar um genérico "programa"
 
 Protocolo de comunicação entre arena e display:
 

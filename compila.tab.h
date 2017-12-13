@@ -69,8 +69,12 @@ extern int yydebug;
     WHILE = 279,
     FUNC = 280,
     PRINT = 281,
-    NEG = 282,
-    PWR = 283
+    MOVERt = 282,
+    ATACARt = 283,
+    DEPOSITARt = 284,
+    RECOLHERt = 285,
+    NEG = 286,
+    PWR = 287
   };
 #endif
 
@@ -79,13 +83,13 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 24 "compila.y" /* yacc.c:1909  */
+#line 40 "compila.y" /* yacc.c:1909  */
 
   double val;
   /* symrec *cod; */
   char cod[30];
 
-#line 89 "compila.tab.h" /* yacc.c:1909  */
+#line 93 "compila.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

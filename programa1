@@ -14,4 +14,7 @@ while (k > 0) {
  print k;
 }
 
+
+mover(LESTE);
+
 print z+(y/100);

@@ -525,7 +525,7 @@ int main () {
   //testaAtaque(arena);
   //testaColeta(arena);
   //testaDeposita(arena);
-  for (i = 0 ; i < 10 ; i++) atualiza(arena, 1);
+  for (i = 0 ; i < 10 ; i++) atualiza(arena, 5);
   pclose(arena->display);
   return 0;
 }

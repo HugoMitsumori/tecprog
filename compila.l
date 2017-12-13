@@ -18,6 +18,10 @@ if      { return IF; }
 while	{ return WHILE; }
 func|def { return FUNC; }
 print   { return PRINT; }
+mover   { return MOVERt; }
+atacar  { return ATACARt; }
+depositar { return DEPOSITARt; }
+recolher  { return RECOLHERt; }
 
 
 {L}{H}* { 

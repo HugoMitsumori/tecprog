@@ -3,10 +3,12 @@
 %{
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 #include "symrec.h"
 #include "acertos.h"
 #include "instr.h"
-  
+
+ 
 int yylex();
 void yyerror(char const *);
 int compila(FILE *, INSTR *);
@@ -18,6 +20,20 @@ static int parmcnt = 0;		/* contador de parâmetros */
 void AddInstr(OpCode op, int val) {
   prog[ip++] = (INSTR) {op,  {NUM, {val}}};
 }
+
+void AddAcao(TipoAcao tipo, int direcao) {
+	prog[ip++] = (INSTR) {SYS, {ACAO, {.acao = { tipo, direcao }}}};
+}
+
+int direcao (char* dir){
+	if (strcmp(dir, "NORDESTE") == 0) return 0;
+	if (strcmp(dir, "LESTE") == 0) return 1;
+	if (strcmp(dir, "SUDESTE") == 0) return 2;
+	if (strcmp(dir, "SUDOESTE") == 0) return 3;
+	if (strcmp(dir, "OESTE") == 0) return 4;
+	if (strcmp(dir, "NOROESTE") == 0) return 5;	
+}
+
 %}
 
 /*  Declaracoes */
@@ -34,6 +50,7 @@ void AddInstr(OpCode op, int val) {
 %token ADDt SUBt MULt DIVt ASGN OPEN CLOSE RETt EOL
 %token EQt NEt LTt LEt GTt GEt ABRE FECHA SEP
 %token IF WHILE FUNC PRINT
+%token MOVERt ATACARt DEPOSITARt RECOLHERt
 
 %right ASGN
 %left ADDt SUBt
@@ -54,6 +71,7 @@ Comando: Expr EOL
        | Cond
        | Loop
        | Func
+       | Acao
 	   | PRINT Expr EOL { AddInstr(PRN, 0);}
 	   | RETt EOL {
 		 	     AddInstr(LEAVE, 0);
@@ -84,11 +102,11 @@ Expr: NUMt {  AddInstr(PUSH, $1);}
 	/* 		 AddInstr(ATR, $3); */
  	/* 	 } */
 	| Chamada 
-    | Expr ADDt Expr { AddInstr(ADD,  0);}
+  | Expr ADDt Expr { AddInstr(ADD,  0);}
 	| Expr SUBt Expr { AddInstr(SUB,  0);}
 	| Expr MULt Expr { AddInstr(MUL,  0);}
 	| Expr DIVt Expr { AddInstr(DIV,  0);}
-    | '-' Expr %prec NEG  { printf("  {CHS,  0},\n"); }
+  | '-' Expr %prec NEG  { printf("  {CHS,  0},\n"); }
 	| OPEN Expr CLOSE
 	| Expr LTt Expr  { AddInstr(LT,   0);}
 	| Expr GTt Expr  { AddInstr(GT,   0);}
@@ -144,6 +162,15 @@ Func: FUNC ID
 	  }
 	  ;
 
+Acao: 
+		| MOVERt OPEN ID CLOSE EOL
+		{
+			AddAcao(MOVER, direcao($3));
+		}
+		| ATACARt
+		| DEPOSITARt
+		| RECOLHERt
+
 Args: 
 	| ID {
 	  	 putsym($1);
@@ -183,7 +210,7 @@ ListParms:
 extern FILE *yyin;
 
 void yyerror(char const *msg) {
-  fprintf(stderr,"ERRO: %s",msg);
+  fprintf(stderr,"ERRO: %s\n",msg);
 }
 
 int compilador(FILE *cod, INSTR *dest) {

@@ -1,9 +1,8 @@
-mover(SUDESTE);
-mover(SUDOESTE);
-mover(SUDESTE);
-mover(SUDESTE);
-mover(SUDESTE);
-mover(SUDESTE);
+mover(OESTE);
+mover(OESTE);
+mover(OESTE);
+mover(OESTE);
+mover(OESTE);
 
 
 

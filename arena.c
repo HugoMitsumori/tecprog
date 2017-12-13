@@ -108,6 +108,7 @@ void insereMaquina (Arena* arena, int time, Posicao pos) {
   FILE *codigo;
   char arquivo[9];
   sprintf(arquivo, "programa%d", time);
+  printf("arquivo: %s\n", arquivo);
   codigo = fopen(arquivo, "r");  
   if (codigo == NULL){
     printf("%s não existe, carregando programa padrão\n", arquivo);
@@ -266,14 +267,16 @@ void atacar (Arena* arena, Maquina* maquina, int direcao){
 void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
   int i, j;
   Posicao pos_vizinha = vizinho(maquina->posicao, direcao);
-  Celula* cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
+  Celula* cel_vizinha = NULL;
+  if (pos_vizinha.i >= 0 && pos_vizinha.j >=0)
+    cel_vizinha = arena->celulas[pos_vizinha.i][pos_vizinha.j];
   Celula* atual = arena->celulas[maquina->posicao.i][maquina->posicao.j];
   Maquina* maq;
   switch (tipo) {
     case NULO:
       break;
     case MOVER:      
-      if (cel_vizinha != NULL && !cel_vizinha->ocupado) {
+      if (cel_vizinha != NULL && !cel_vizinha->ocupado && !cel_vizinha->num_cristais && !cel_vizinha->base) {
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
         fprintf(arena->display, "%d %d %d %d %d\n", maquina->id, maquina->posicao.i, maquina->posicao.j, pos_vizinha.i, pos_vizinha.j);
@@ -527,6 +530,9 @@ int main () {
   //testaAtaque(arena);
   //testaColeta(arena);
   //testaDeposita(arena);
+  //  imprimeMaquinas(arena);
+  //  imprimeCelulas(arena);
+  printf("\n");
   for (i = 0 ; i < 10 ; i++) atualiza(arena, 1);
   pclose(arena->display);
   return 0;

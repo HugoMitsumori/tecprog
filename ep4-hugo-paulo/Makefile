@@ -5,9 +5,9 @@ CFLAGS = -std=c99 -g2 -O2
 
 .PHONY: clean
 
-all: clean ep2 controle run
+all: clean ep4 controle
 
-ep2: compila.tab.o lex.yy.o symrec.o acertos.o arena.o maq.o pilha.o posicao.o
+ep4: compila.tab.o lex.yy.o symrec.o acertos.o arena.o maq.o pilha.o posicao.o
 	$(CC) -o $@ $^ -lm -lfl
 
 controle: controle.o
@@ -28,7 +28,7 @@ lex.yy.o: compila.l
 	gcc -c lex.yy.c -std=c99
 
 clean:
-	rm -f *.o *~ ep2 \#*\#
+	rm -f *.o *~ ep4 \#*\#
 
 run: 
 	./ep2

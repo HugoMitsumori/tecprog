@@ -70,6 +70,7 @@ Maquina *cria_maquina(INSTR *p) {
 }
 
 void destroi_maquina(Maquina *m) {
+  free(m->prog);
   free(m);
 }
 

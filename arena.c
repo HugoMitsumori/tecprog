@@ -103,12 +103,11 @@ INSTR programa[] = {
 /* TODO: receber instrucoes como parametro? */
 void insereMaquina (Arena* arena, int time, Posicao pos) {
   int i, res;
-  /* cria a maquina na primeira posicao livre da linha */
-  INSTR prog[1000];
+  /* cria a maquina na primeira posicao livre da linha */  
+  INSTR *prog = malloc (1000* sizeof(INSTR));
   FILE *codigo;
   char arquivo[9];
   sprintf(arquivo, "programa%d", time);
-  printf("arquivo: %s\n", arquivo);
   codigo = fopen(arquivo, "r");  
   if (codigo == NULL){
     printf("%s não existe, carregando programa padrão\n", arquivo);
@@ -134,6 +133,7 @@ void insereMaquina (Arena* arena, int time, Posicao pos) {
     }
     printf("Não há mais espaço para novas máquinas nesse time!");
   }
+  fclose(codigo);
 }
 
 /* insere as maquinas de um novo time na arena */

@@ -106,6 +106,7 @@ void insereMaquina (Arena* arena, int time, Posicao pos) {
   /* cria a maquina na primeira posicao livre da linha */  
   INSTR *prog = malloc (1000* sizeof(INSTR));
   FILE *codigo;
+  Maquina* maquina;
   char arquivo[9];
   sprintf(arquivo, "programa%d", time);
   codigo = fopen(arquivo, "r");  
@@ -121,13 +122,15 @@ void insereMaquina (Arena* arena, int time, Posicao pos) {
       if ( arena->maquinas[time-1][i] == NULL ) /* aloca espaço se necessário */      
         arena->maquinas[time-1][i] = cria_maquina(prog);
       if ( arena->maquinas[time-1][i]->id == 0 ) { /* senão, só setta as variaveis */
-        arena->maquinas[time-1][i]->id = time * 100 + i + 1;
-        arena->maquinas[time-1][i]->time = time;
-        arena->maquinas[time-1][i]->posicao.i = pos.i;
-        arena->maquinas[time-1][i]->posicao.j = pos.j;
+        maquina = arena->maquinas[time-1][i];
+        maquina->id = time * 100 + i + 1;
+        maquina->time = time;
+        maquina->posicao.i = pos.i;
+        maquina->posicao.j = pos.j;
         arena->celulas[pos.i][pos.j]->ocupado = 1;
         arena->celulas[pos.i][pos.j]->num_cristais = 0;
-        fprintf(arena->display, "rob GILEAD_A.png %d\n", arena->maquinas[time-1][i]->id);
+        fprintf(arena->display, "rob GILEAD_A.png %d\n", maquina->id);
+        fprintf(arena->display, "%d %d %d %d %d\n", maquina->id, maquina->posicao.i, maquina->posicao.j, maquina->posicao.i, maquina->posicao.j);
         return;
       }
     }
@@ -277,13 +280,13 @@ void sistema (Arena * arena, Maquina* maquina, TipoAcao tipo, int direcao){
     case NULO:
       break;
     case MOVER:      
-      if (cel_vizinha != NULL && !cel_vizinha->ocupado && !cel_vizinha->num_cristais && !cel_vizinha->base) {
+      if (cel_vizinha != NULL && !cel_vizinha->ocupado && cel_vizinha->num_cristais == 0 && cel_vizinha->base == 0) {
         atual->ocupado = FALSE;
         cel_vizinha->ocupado = TRUE;
         fprintf(arena->display, "%d %d %d %d %d\n", maquina->id, maquina->posicao.i, maquina->posicao.j, pos_vizinha.i, pos_vizinha.j);
         maquina->posicao.i = pos_vizinha.i;
         maquina->posicao.j = pos_vizinha.j;
-      }      
+      }
       break;
     case RECOLHER:
       if (cel_vizinha->num_cristais > 0){
